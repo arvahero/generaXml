@@ -291,12 +291,12 @@ public class generaXml {
     public void generarEncabezadoConexion(int tipo) {
         tipoDocumento = "";
         if (tipo == 0) {
-            tipoDocumento = "[FACTURA]";
-            etiquetaFinDoc = "[/FACTURA]";
+            tipoDocumento = "<FACTURA>";
+            etiquetaFinDoc = "</FACTURA>";
         }
         if (tipo == 1) {
-            tipoDocumento = "[NOTANC]";
-            etiquetaFinDoc = "[/NOTANC]";
+            tipoDocumento = "<NOTANC>";
+            etiquetaFinDoc = "</NOTANC>";
         }
 
         cufe = "[NO]";
@@ -319,12 +319,11 @@ public class generaXml {
                 + "CG.IDPais,FVC.IDFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
                 + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.IDContador NOT LIKE 'N%' and FechaFactura >=CONVERT(date,GETDATE()) and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 */
-        String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbClienteObservacion.IDObservacion as clasificacionCliente,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
+        String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
                 + "C.Provincia as DptoC,C.IDPais as PaisC,FVCCG.CodPostal, FVCCG.NFactura,SUBSTRING(FVCCG.NFactura,LEN(FVCCG.IDContador)+1,LEN(FVCCG.NFactura)-LEN(FVCCG.IDContador)) "
                 + "AS Folio,CONVERT(CHAR(10),FVCCG.FechaFactura,23) as Fecha,CONVERT(CHAR(10), FVCCG.FechaFactura,108) as Hora,FVCCG.FechaFactura,CONVERT(CHAR(10),FVCCG.FechaVencimiento,23) as FechaV,FVCCG.FechaVencimiento,FVCCG.IDContador,FVCCG.IDMoneda,"
                 + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
-                + "left JOIN tbClienteObservacion on C.IDGrupoCliente =  tbClienteObservacion.IDCliente JOIN"
-                + "(select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
+                + "JOIN (select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
                 + "CG.IDPais,FVC.IDFactura, FVC.TipoFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
                 + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.IDContador NOT LIKE 'N%' and FVCCG.FechaFactura >=CONVERT(date,'2020-02-29') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 
@@ -389,9 +388,9 @@ public class generaXml {
             while (datosDocumento.next()) {
                 nombreArchivo = datosDocumento.getString("NFactura");
                 if(sSistemaOperativo.contains("Mac")){
-                    inicializarArchivo("//" + nombreArchivo + ".txt");
+                    inicializarArchivo("//" + nombreArchivo + ".xml");
                 }else
-                inicializarArchivo("C:\\spool\\" + nombreArchivo + ".txt");
+                inicializarArchivo("C:\\spool\\" + nombreArchivo + ".xml");
                 obligacionesADQ ="";
                 //Datos Encabezado ENC
                 //cifCliente = datosDocumento.getString("CifCliente");
@@ -406,8 +405,8 @@ public class generaXml {
                 fechaVencimientoFactura = datosDocumento.getString("FechaV");
 
                 //Datos Emisor ADQ
-                tipoPersonaADQ = datosDocumento.getString("clasificacionCliente");
-                regimenADQ = datosDocumento.getString("clasificacionCliente");
+                tipoPersonaADQ = "";
+                regimenADQ = "";
                 tipoDocumentoADQ = datosDocumento.getString("IDDocIdentidad");
                 direccionADQ = datosDocumento.getString("DireccionC");
                 razonSocialADQ = datosDocumento.getString("RazonSocial");
@@ -570,8 +569,8 @@ public class generaXml {
                 ENC_1 += "INVOICE";
                 ENC_2 += cif + "";
                 ENC_3 += cifCliente + "";
-                //ENC_6 += numeroFactura + "";
-                ENC_6 += "PRUE980000100";
+                ENC_6 += numeroFactura + "";
+                //ENC_6 += "PRUE980000100";
                 ENC_7 += fechaEmisionFactura + "";
                 ENC_8 += horaEmisionFactura + zonaHoraria + "";
                 ENC_9 += "1";
@@ -644,15 +643,27 @@ public class generaXml {
                     GTE_2 ="<GTE_2>Impuesto de Valor Agregado";
                 }
                 
-                ADQ_1 += tipoPersonaADQ + "";
-                ADQ_2 += cifCliente + "";
-                ADQ_3 += tipoDocumentoADQ + "";
                 String consulta = "select IDObservacion from tbClienteObservacion where IDCliente = "+"'"+cifCliente+"'";
                 r =fachada.ejecutarConsulta(consulta);
                 
                 while (r.next()){
                     obligacionesADQ+=r.getString("IDObservacion")+";";
                 }
+                
+                if(obligacionesADQ.contains("T-01")){
+                    obligacionesADQ =obligacionesADQ.replace("T-01;","");
+                    tipoPersonaADQ = "1";
+                }else if(obligacionesADQ.contains("T-02")){
+                    obligacionesADQ =obligacionesADQ.replace("T-02;","");
+                    tipoPersonaADQ = "2";
+                }
+                
+                ADQ_1 += tipoPersonaADQ + "";
+                ADQ_2 += cifCliente + "";
+                ADQ_3 += tipoDocumentoADQ + "";
+                
+                   
+                        
                 
                 ADQ_4 = "<ADQ_4>";
                 if(obligacionesADQ.contains("O-48")){
@@ -843,180 +854,180 @@ public class generaXml {
                 //////////////////////////////////
                 ///////ENCABEZADO
                 /////////////////////////////////
-                writer.println(etiquetaInicialENC);
-                writer.println(ENC_1+"</ENC_1>");
-                writer.println(ENC_2+"</ENC_2>");
-                writer.println(ENC_3+"</ENC_3>");
-                writer.println(ENC_4+"</ENC_4>");
-                writer.println(ENC_5+"</ENC_5>");
-                writer.println(ENC_6+"</ENC_6>");
-                writer.println(ENC_7+"</ENC_7>");
-                writer.println(ENC_8+"</ENC_8>");
-                writer.println(ENC_9+"</ENC_9>");
-                writer.println(ENC_10+"</ENC_10>");
-                writer.println(ENC_15+"</ENC_15>");
-                writer.println(ENC_16+"</ENC_16>");
-                writer.println(ENC_20+"</ENC_20>");
-                writer.println(ENC_21+"</ENC_21>");
-                writer.println(etiquetaFinalENC);
+                writer.println("\t"+etiquetaInicialENC);
+                writer.println("\t"+ENC_1+"</ENC_1>");
+                writer.println("\t"+ENC_2+"</ENC_2>");
+                writer.println("\t"+ENC_3+"</ENC_3>");
+                writer.println("\t"+ENC_4+"</ENC_4>");
+                writer.println("\t"+ENC_5+"</ENC_5>");
+                writer.println("\t"+ENC_6+"</ENC_6>");
+                writer.println("\t"+ENC_7+"</ENC_7>");
+                writer.println("\t"+ENC_8+"</ENC_8>");
+                writer.println("\t"+ENC_9+"</ENC_9>");
+                writer.println("\t"+ENC_10+"</ENC_10>");
+                writer.println("\t"+ENC_15+"</ENC_15>");
+                writer.println("\t"+ENC_16+"</ENC_16>");
+                writer.println("\t"+ENC_20+"</ENC_20>");
+                writer.println("\t"+ENC_21+"</ENC_21>");
+                writer.println("\t"+etiquetaFinalENC);
                 //////////////////////////////////
                 ///////EMISOR
                 /////////////////////////////////
-                writer.println(etiquetaInicialEMI);
-                writer.println(EMI_1+"</EMI_1>");
-                writer.println(EMI_2+"</EMI_2>");
-                writer.println(EMI_3+"</EMI_3>");
-                writer.println(EMI_4+"</EMI_4>");
-                writer.println(EMI_6+"</EMI_6>");
-                writer.println(EMI_10+"</EMI_10>");
-                writer.println(EMI_11+"</EMI_11>");
+                writer.println("\t"+etiquetaInicialEMI);
+                writer.println("\t"+EMI_1+"</EMI_1>");
+                writer.println("\t"+EMI_2+"</EMI_2>");
+                writer.println("\t"+EMI_3+"</EMI_3>");
+                writer.println("\t"+EMI_4+"</EMI_4>");
+                writer.println("\t"+EMI_6+"</EMI_6>");
+                writer.println("\t"+EMI_10+"</EMI_10>");
+                writer.println("\t"+EMI_11+"</EMI_11>");
                 //writer.println(EMI_12);
-                writer.println(EMI_13+"</EMI_13>");
-                writer.println(EMI_14+"</EMI_14>");
-                writer.println(EMI_15+"</EMI_15>");
+                writer.println("\t"+EMI_13+"</EMI_13>");
+                writer.println("\t"+EMI_14+"</EMI_14>");
+                writer.println("\t"+EMI_15+"</EMI_15>");
                 //writer.println(EMI_18);
-                writer.println(EMI_19+"</EMI_19>");
+                writer.println("\t"+EMI_19+"</EMI_19>");
                 //writer.println(EMI_20);
-                writer.println(EMI_21+"</EMI_21>");
-                writer.println(EMI_22+"</EMI_22>");
-                writer.println(EMI_23+"</EMI_23>");
-                writer.println(EMI_24+"</EMI_24>");
-                writer.println(EMI_25+"</EMI_25>");
+                writer.println("\t"+EMI_21+"</EMI_21>");
+                writer.println("\t"+EMI_22+"</EMI_22>");
+                writer.println("\t"+EMI_23+"</EMI_23>");
+                writer.println("\t"+EMI_24+"</EMI_24>");
+                writer.println("\t"+EMI_25+"</EMI_25>");
                 ///////////////////////////////////
                 ///////TAC
                 ///////////////////////////////////
-                writer.println(etiquetaInicialTAC);
-                writer.println(TAC_1+"</TAC_1>");
-                writer.println(etiquetaFinalTAC);
+                writer.println("\t"+"\t"+etiquetaInicialTAC);
+                writer.println("\t"+"\t"+TAC_1+"</TAC_1>");
+                writer.println("\t"+"\t"+etiquetaFinalTAC);
                 /////////////////////////////////
                 //////DFE
-                writer.println(etiquetaInicialDFE);
-                writer.println(DFE_1+"</DFE_1>");
-                writer.println(DFE_2+"</DFE_2>");
-                writer.println(DFE_3+"</DFE_3>");
+                writer.println("\t"+"\t"+etiquetaInicialDFE);
+                writer.println("\t"+"\t"+DFE_1+"</DFE_1>");
+                writer.println("\t"+"\t"+DFE_2+"</DFE_2>");
+                writer.println("\t"+"\t"+DFE_3+"</DFE_3>");
                 
-                writer.println(etiquetaFinalDFE);
+                writer.println("\t"+"\t"+etiquetaFinalDFE);
                 /////////////////////////////////
                 /////////////////////////////////
                 //////ICC
                 /////////////////////////////////
-                writer.println(etiquetaInicialICC);
-                writer.println(ICC_1+"</ICC_1>");
+                writer.println("\t"+"\t"+etiquetaInicialICC);
+                writer.println("\t"+"\t"+ICC_1+"</ICC_1>");
                 //writer.println("ICC_3>Yumbo");
                 //writer.println("ICC_5>Valle");
                 //writer.println("ICC_6>CL 15 22 200");
                 //writer.println("ICC_7>CO");
                 //writer.println("ICC_8>Colombia");
-                writer.println(ICC_9+"</ICC_9>");
-                writer.println(etiquetaFinalICC);
+                writer.println("\t"+"\t"+ICC_9+"</ICC_9>");
+                writer.println("\t"+"\t"+etiquetaFinalICC);
                 //////////////////////////////////
                 ///////CDE
                 //////////////////////////////////
-                writer.println(etiquetaInicialCDE);
-                writer.println(CDE_1+"</CDE_1>");
-                writer.println(CDE_2+"</CDE_2>");
-                writer.println(CDE_4+"</CDE_4>");
-                writer.println(etiquetaFinalCDE);
-                writer.println(etiquetaFinalEMI);
+                writer.println("\t"+"\t"+etiquetaInicialCDE);
+                writer.println("\t"+"\t"+CDE_1+"</CDE_1>");
+                writer.println("\t"+"\t"+CDE_2+"</CDE_2>");
+                writer.println("\t"+"\t"+CDE_4+"</CDE_4>");
+                writer.println("\t"+"\t"+etiquetaFinalCDE);                
                 //////////////////////////////////
                 ///////GTE
                 //////////////////////////////////
-                writer.println(etiquetaInicialGTE);
-                writer.println(GTE_1+"</GTE_1>");
-                writer.println(GTE_2+"</GTE_2>");
-                writer.println(etiquetaFinalGTE);
+                writer.println("\t"+"\t"+etiquetaInicialGTE);
+                writer.println("\t"+"\t"+GTE_1+"</GTE_1>");
+                writer.println("\t"+"\t"+GTE_2+"</GTE_2>");
+                writer.println("\t"+"\t"+etiquetaFinalGTE);
+                writer.println("\t"+etiquetaFinalEMI);
                 //////////////////////////////////
                 ///////ADQUIRIENTE
                 //////////////////////////////////
-                writer.println(etiquetaInicialADQ );
-                writer.println(ADQ_1+"</ADQ_1>");
-                writer.println(ADQ_2+"</ADQ_2>");
-                writer.println(ADQ_3+"</ADQ_3>");
-                writer.println(ADQ_4+"</ADQ_4>");
-                writer.println(ADQ_6+"</ADQ_6>");
-                writer.println(ADQ_7+"</ADQ_7>");
-                writer.println(ADQ_8+"</ADQ_8>");
-                writer.println(ADQ_10+"</ADQ_10>");
-                writer.println(ADQ_11+"</ADQ_11>");
-                writer.println(ADQ_13+"</ADQ_13>");
-                writer.println(ADQ_14+"</ADQ_14>");
-                writer.println(ADQ_15+"</ADQ_15>");
-                writer.println(ADQ_19+"</ADQ_19>");
-                writer.println(ADQ_21+"</ADQ_21>");
-                writer.println(ADQ_22+"</ADQ_22>");
-                writer.println(ADQ_23+"</ADQ_23>");
+                writer.println("\t"+etiquetaInicialADQ );
+                writer.println("\t"+ADQ_1+"</ADQ_1>");
+                writer.println("\t"+ADQ_2+"</ADQ_2>");
+                writer.println("\t"+ADQ_3+"</ADQ_3>");
+                writer.println("\t"+ADQ_4+"</ADQ_4>");
+                writer.println("\t"+ADQ_6+"</ADQ_6>");
+                writer.println("\t"+ADQ_7+"</ADQ_7>");
+                writer.println("\t"+ADQ_8+"</ADQ_8>");
+                writer.println("\t"+ADQ_10+"</ADQ_10>");
+                writer.println("\t"+ADQ_11+"</ADQ_11>");
+                writer.println("\t"+ADQ_13+"</ADQ_13>");
+                writer.println("\t"+ADQ_14+"</ADQ_14>");
+                writer.println("\t"+ADQ_15+"</ADQ_15>");
+                writer.println("\t"+ADQ_19+"</ADQ_19>");
+                writer.println("\t"+ADQ_21+"</ADQ_21>");
+                writer.println("\t"+ADQ_22+"</ADQ_22>");
+                writer.println("\t"+ADQ_23+"</ADQ_23>");
                 ////////////////////////////////////
                 //////TCR
                 ///////////////////////////////////
-                writer.println(etiquetaInicialTCR);
-                writer.println(TCR_1+"</TCR_1>");
-                writer.println(etiquetaFinalTCR);                
+                writer.println("\t"+"\t"+etiquetaInicialTCR);
+                writer.println("\t"+"\t"+TCR_1+"</TCR_1>");
+                writer.println("\t"+"\t"+etiquetaFinalTCR);                
                 ////////////////////////////////////
                 //////ILA
                 ///////////////////////////////////
-                writer.println(etiquetaInicialILA);
-                writer.println(ILA_1+"</ILA_1>");
-                writer.println(ILA_2+"</ILA_2>");
-                writer.println(ILA_3+"</ILA_3>");
-                writer.println(ILA_4+"</ILA_4>");                   
-                writer.println(etiquetaFinalILA);
+                writer.println("\t"+"\t"+etiquetaInicialILA);
+                writer.println("\t"+"\t"+ILA_1+"</ILA_1>");
+                writer.println("\t"+"\t"+ILA_2+"</ILA_2>");
+                writer.println("\t"+"\t"+ILA_3+"</ILA_3>");
+                writer.println("\t"+"\t"+ILA_4+"</ILA_4>");                   
+                writer.println("\t"+"\t"+etiquetaFinalILA);
                 ////////////////////////////////////
                 //////DFA
                 ///////////////////////////////////
-                writer.println(etiquetaInicialDFA);
-                writer.println(DFA_1+"</DFA_1>");
-                writer.println(DFA_2+"</DFA_2>");
-                writer.println(DFA_3+"</DFA_3>");
-                writer.println(DFA_4+"</DFA_4>");                   
-                writer.println(etiquetaFinalDFA);
+                writer.println("\t"+"\t"+etiquetaInicialDFA);
+                writer.println("\t"+"\t"+DFA_1+"</DFA_1>");
+                writer.println("\t"+"\t"+DFA_2+"</DFA_2>");
+                writer.println("\t"+"\t"+DFA_3+"</DFA_3>");
+                writer.println("\t"+"\t"+DFA_4+"</DFA_4>");                   
+                writer.println("\t"+"\t"+etiquetaFinalDFA);
                 ////////////////////////////////////
                 //////ICR
                 ///////////////////////////////////
-                writer.println(etiquetaInicialICR);
-                writer.println(ICR_1+"</ICR_1>");           
-                writer.println(etiquetaFinalICR);
+                writer.println("\t"+"\t"+etiquetaInicialICR);
+                writer.println("\t"+"\t"+ICR_1+"</ICR_1>");           
+                writer.println("\t"+"\t"+etiquetaFinalICR);
                 ////////////////////////////////////
                 //////GTA
                 ///////////////////////////////////
-                writer.println(etiquetaInicialGTA);
-                writer.println(GTA_1+"</GTA_1>");     
-                writer.println(GTA_2+"</GTA_2>");
-                writer.println(etiquetaFinalGTA);
-                writer.println(etiquetaFinalADQ);
+                writer.println("\t"+"\t"+etiquetaInicialGTA);
+                writer.println("\t"+"\t"+GTA_1+"</GTA_1>");     
+                writer.println("\t"+"\t"+GTA_2+"</GTA_2>");
+                writer.println("\t"+"\t"+etiquetaFinalGTA);
+                writer.println("\t"+etiquetaFinalADQ);
                 ////////////////////////////////////////////
                 ///////TOTALES
                 ///////////////////////////////////////////
-                writer.println(etiquetaInicialTOT);
-                writer.println(TOT_1+"</TOT_1>");
-                writer.println(TOT_2+"</TOT_2>");
-                writer.println(TOT_3+"</TOT_3>");
-                writer.println(TOT_4+"</TOT_4>");
-                writer.println(TOT_5+"</TOT_5>");
-                writer.println(TOT_6+"</TOT_6>");
+                writer.println("\t"+etiquetaInicialTOT);
+                writer.println("\t"+TOT_1+"</TOT_1>");
+                writer.println("\t"+TOT_2+"</TOT_2>");
+                writer.println("\t"+TOT_3+"</TOT_3>");
+                writer.println("\t"+TOT_4+"</TOT_4>");
+                writer.println("\t"+TOT_5+"</TOT_5>");
+                writer.println("\t"+TOT_6+"</TOT_6>");
                 //writer.println(TOT_7);
                 //writer.println(TOT_8);
-                writer.println(etiquetaFinalTOT);
+                writer.println("\t"+etiquetaFinalTOT);
                 ///////////////////////////////////////////////
                 //////DFR
                 //////////////////////////////////////////////
-                writer.println(etiquetaInicialDRF);
-                writer.println(DRF_1+"</DRF_1>");
-                writer.println(DRF_2+"</DRF_2>");
-                writer.println(DRF_4+"</DRF_4>");
-                writer.println(DRF_5+"</DRF_5>");
-                writer.println(DRF_6+"</DRF_6>");
-                writer.println(etiquetaFinalDRF);
+                writer.println("\t"+etiquetaInicialDRF);
+                writer.println("\t"+DRF_1+"</DRF_1>");
+                writer.println("\t"+DRF_2+"</DRF_2>");
+                writer.println("\t"+DRF_4+"</DRF_4>");
+                writer.println("\t"+DRF_5+"</DRF_5>");
+                writer.println("\t"+DRF_6+"</DRF_6>");
+                writer.println("\t"+etiquetaFinalDRF);
                 //////////////////////////////////////////
                 ///////NOT
-                writer.println(etiquetaInicialNOT);
-                writer.println(notaFactura+"</NOT_1>");
-                writer.println(etiquetaFinalNOT);
+                writer.println("\t"+etiquetaInicialNOT);
+                writer.println("\t"+notaFactura+"</NOT_1>");
+                writer.println("\t"+etiquetaFinalNOT);
                 ///////////////////////////////////////////////
                 ///////CTS
                 ///////////////////////////////////////////////
-                writer.println(etiquetaInicialCTS);
-                writer.println(infoCarvajal+"</CTS_1>");
-                writer.println(etiquetaFinalCTS);
+                //writer.println("\t"+"\t"+etiquetaInicialCTS);
+                //writer.println("\t"+"\t"+infoCarvajal+"</CTS_1>");
+                //writer.println("\t"+"\t"+etiquetaFinalCTS);
                 //////////////////////////////////////////////
                 //////ITE
                 /////////////////////////////////////////////
@@ -1066,30 +1077,30 @@ public class generaXml {
 
                     itemsFactura += etiquetaFinalITE;
                                     writer.println(etiquetaInicialITE);
-                writer.println(ITE_1+"</ITE_1>");
-                writer.println(ITE_2+"</ITE_2>");
-                writer.println(ITE_3+"</ITE_3>");
-                writer.println(ITE_4+"</ITE_4>");
-                writer.println(ITE_5+"</ITE_5>");
-                writer.println(ITE_6+"</ITE_6>");
-                writer.println(ITE_7+"</ITE_7>");
-                writer.println(ITE_8+"</ITE_8>");
-                writer.println(ITE_9+"</ITE_9>");
-                writer.println(ITE_11+"</ITE_11>");
-                writer.println(ITE_19+"</ITE_19>");
-                writer.println(ITE_20+"</ITE_20>");
+                writer.println("\t"+ITE_1+"</ITE_1>");
+                writer.println("\t"+ITE_2+"</ITE_2>");
+                writer.println("\t"+ITE_3+"</ITE_3>");
+                writer.println("\t"+ITE_4+"</ITE_4>");
+                writer.println("\t"+ITE_5+"</ITE_5>");
+                writer.println("\t"+ITE_6+"</ITE_6>");
+                writer.println("\t"+ITE_7+"</ITE_7>");
+                writer.println("\t"+ITE_8+"</ITE_8>");
+                writer.println("\t"+ITE_9+"</ITE_9>");
+                writer.println("\t"+ITE_11+"</ITE_11>");
+                writer.println("\t"+ITE_19+"</ITE_19>");
+                writer.println("\t"+ITE_20+"</ITE_20>");
                 //////////////////////////////////////
                 ///////LOTE
                 //////////////////////////////////////
 
                 if (lote != null) {
                     writer.println(etiquetaInicialLote);
-                    writer.println("<LOT_1>"+lote+"</lot_1>");
+                    writer.println("\t"+"\t"+"<LOT_1>"+lote+"</lot_1>");
                     writer.println(etiquetaFinalLote);
                 }
                 ////////////////////////////////////////
                 ////////
-                writer.println(etiquetaFinalITE);
+                writer.println("\t"+etiquetaFinalITE);
 
                 }
                 writer.println(etiquetaFinDoc);
