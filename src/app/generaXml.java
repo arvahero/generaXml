@@ -21,6 +21,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.lang.String;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -378,11 +379,12 @@ public class generaXml {
             }
         } catch (SQLException ex) {
             Logger.getLogger(generaXml.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.print(ex);
         }
     }
 
     public void generarFacturas(ResultSet datosDocumento, ResultSet datosEmpresa) {        
-
+         
         try {
 
             while (datosDocumento.next()) {
@@ -411,9 +413,23 @@ public class generaXml {
                 direccionADQ = datosDocumento.getString("DireccionC");
                 razonSocialADQ = datosDocumento.getString("RazonSocial");
                 nombreComercialADQ = datosDocumento.getString("DescCliente");
-                codPostalADQ = datosDocumento.getString("CodPostal");
+                codPostalADQ = datosDocumento.getString("CodPostal");       
+                /*
+                if (codPostalADQ == null){
+                    mensajesErrorCamposCliente("codPostalADQ", id);
+                }*/
+                
                 poblacionADQ = datosDocumento.getString("CiudadC");
+                /*
+                if (poblacionADQ == null ){
+                    mensajesErrorCamposCliente("poblacionADQ", id);
+                }*/
+                
                 provinciaADQ = datosDocumento.getString("DptoC");
+                /*
+                if (provinciaADQ == null){
+                    mensajesErrorCamposCliente("provinciaADQ", id);
+                }*/
 
                 //Totales
                 baseImponible = datosDocumento.getDouble("baseImponible");
@@ -643,20 +659,20 @@ public class generaXml {
                     GTE_2 ="<GTE_2>Impuesto de Valor Agregado";
                 }
                 
-                String consulta = "select IDObservacion from tbClienteObservacion where IDCliente = "+"'"+cifCliente+"'";
-                r =fachada.ejecutarConsulta(consulta);
+               
+                r =fachada.ejecutarConsulta("select tbClienteObservacion.IDObservacion, Entidad from tbClienteObservacion inner join tbMaestroObservacion on tbClienteObservacion.IDObservacion = tbMaestroObservacion.IDObservacion where IDCliente = "+"'"+cifCliente+"' and Entidad = "+"'"+"ClienteObservacion"+"'");
                 
                 while (r.next()){
                     obligacionesADQ+=r.getString("IDObservacion")+";";
                 }
                 
-                if(obligacionesADQ.contains("T-01")){
-                    obligacionesADQ =obligacionesADQ.replace("T-01;","");
-                    tipoPersonaADQ = "1";
-                }else if(obligacionesADQ.contains("T-02")){
-                    obligacionesADQ =obligacionesADQ.replace("T-02;","");
-                    tipoPersonaADQ = "2";
+             
+                r =fachada.ejecutarConsulta("select tbClienteObservacion.IDObservacion, Entidad from tbClienteObservacion inner join tbMaestroObservacion on tbClienteObservacion.IDObservacion = tbMaestroObservacion.IDObservacion where IDCliente = "+"'"+cifCliente+"' and Entidad = "+"'"+"LatTerceros"+"'");
+                
+                while (r.next()){
+                    tipoPersonaADQ=r.getString("IDObservacion");
                 }
+
                 
                 ADQ_1 += tipoPersonaADQ + "";
                 ADQ_2 += cifCliente + "";
@@ -1111,6 +1127,7 @@ public class generaXml {
 
         } catch (Exception e) {
             System.out.println("Error Factura: " + e.toString());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         } finally {
             //fachada.cerrarConexion();
         }
@@ -1208,5 +1225,11 @@ public class generaXml {
             break;
         }
         return regimen;              
+    }
+    
+    private void mensajesErrorCamposCliente(String campo, String id){
+        
+        System.out.println("Por favor verifique el campo: "+ campo + " del cliente: "+id);
+        
     }
 }
