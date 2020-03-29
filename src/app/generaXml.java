@@ -71,8 +71,8 @@ public class generaXml {
 
     /////////////////////////////////////////////
     String encabezadoDocumento = "";
-    String etiquetaInicialENC = "(ENC)";
-    String etiquetaFinalENC = "(/ENC)";
+    String etiquetaInicialENC = "<ENC>";
+    String etiquetaFinalENC = "</ENC>";
     String cif = "";
     String dv = "";
     String tipoDocEmpresa = "";
@@ -103,8 +103,8 @@ public class generaXml {
 
     //////DATOS DEL EMISOR
     String emisor = "";
-    String etiquetaInicialEMI = "(EMI)";
-    String etiquetaFinalEMI = "(/EMI)";
+    String etiquetaInicialEMI = "<EMI>";
+    String etiquetaFinalEMI = "</EMI>";
     String tipoPersona = "1";
     String tipoDocumentoEmisor = "";
     String EMI_1 = "";//Tipo de persona 1 Juridica - 2 Natural
@@ -137,14 +137,14 @@ public class generaXml {
     ////////////////////////////////////////////
     //////INFORMACION TRIBUTARIA RUT
     String infoTributariaEMI = "";
-    String etiquetaInicialTAC = "(TAC)";
-    String etiquetaFinalTAC = "(/TAC)";
+    String etiquetaInicialTAC = "<TAC>";
+    String etiquetaFinalTAC = "</TAC>";
     String TAC_1 = "";
     
     
     /////////////////////////////////////////////
     //////INFORMACIÓN DIRECCIÓN FISCAL DEL EMISOR
-    String etiquetaInicialDFE = "(DFE)";    
+    String etiquetaInicialDFE = "<DFE>";    
     String DFE_1 = "";
     String DFE_2 = "";
     String DFE_3 = "";
@@ -153,50 +153,50 @@ public class generaXml {
     String DFE_6 = "";
     String DFE_7 = "";
     String DFE_8 = "";   
-    String etiquetaFinalDFE = "(/DFE)";
+    String etiquetaFinalDFE = "</DFE>";
     
 
     ///////////////////////////////////////////
     //////INFORMACIÓN CAMARA DE COMERCIO
     String camaraDeComercio = "";
-    String etiquetaInicialICC = "(ICC)";
-    String etiquetaFinalICC = "(/ICC)";
-    String ICC_1 = "ICC_1:244367-16";
-    //String ICC_2 = "ICC_2:";
-    //String ICC_3 = "ICC_3:Yumbo";
-    //String ICC_4 = "ICC_4:";
-    //String ICC_5 = "ICC_5:Valle";
-    //String ICC_6 = "ICC_6:CRA. 36 NRO. 13 151";
-    //String ICC_7 = "ICC_7:CO";
-    //String ICC_8 = "ICC_8:Colombia";
-    String ICC_9 = "ICC_9:";
+    String etiquetaInicialICC = "<ICC>";
+    String etiquetaFinalICC = "</ICC>";
+    String ICC_1 = "<ICC_1>244367-16";
+    //String ICC_2 = "ICC_2>";
+    //String ICC_3 = "ICC_3>Yumbo";
+    //String ICC_4 = "ICC_4>";
+    //String ICC_5 = "ICC_5>Valle";
+    //String ICC_6 = "ICC_6>CRA. 36 NRO. 13 151";
+    //String ICC_7 = "ICC_7>CO";
+    //String ICC_8 = "ICC_8>Colombia";
+    String ICC_9 = "ICC_9>";
 
     ///////////////////////////////////////////
     //////CONTACTO EMISOR
     String contactoEmisor = "";
-    String etiquetaInicialCDE = "(CDE)";
-    String etiquetaFinalCDE = "(/CDE)";
-    String CDE_1 = "CDE_1:1";
-    String CDE_2 = "CDE_2:Maria Andrea Cardona;";
-    String CDE_3 = "CDE_3:";
-    String CDE_4 = "CDE_4:andreacardona@k-listo.com;";
-    String CDE_5 = "CDE_5:;";
-    String CDE_6 = "CDE_6:;";
+    String etiquetaInicialCDE = "<CDE>";
+    String etiquetaFinalCDE = "</CDE>";
+    String CDE_1 = "<CDE_1>1";
+    String CDE_2 = "CDE_2>Maria Andrea Cardona;";
+    String CDE_3 = "CDE_3>";
+    String CDE_4 = "CDE_4>andreacardona@k-listo.com;";
+    String CDE_5 = "CDE_5>;";
+    String CDE_6 = "CDE_6>;";
     
     /////////////////////////////////////////////
     //////INFORMACION BANCARIA EMISOR
-    String BFE_1 = "BFE_1:";//NUMERO DE LA CUENTA
-    String BFE_2 = "BFE_2:";//NOMBRE TITULAR
-    String BFE_3 = "BFE_3:";//TIPO DE CUENTA CCTE - CAHO
-    String BFE_4 = "BFE_4:";//CODIGO BANCO
-    String BFE_5 = "BFE_5:";//CODIGO EAN SUCURSAL
+    String BFE_1 = "BFE_1>";//NUMERO DE LA CUENTA
+    String BFE_2 = "BFE_2>";//NOMBRE TITULAR
+    String BFE_3 = "BFE_3>";//TIPO DE CUENTA CCTE - CAHO
+    String BFE_4 = "BFE_4>";//CODIGO BANCO
+    String BFE_5 = "BFE_5>";//CODIGO EAN SUCURSAL
 
     /////////////////////////////////////////////
     //////INFORMACION TRIBUTARIA EMISOR
-    String etiquetaInicialGTE = "(GTE)";
-    String GTE_1 = "GTE_1:";//IDENTIFICADOR TRIBUTO 01-IVA
-    String GTE_2 = "GTE_2:";//NOMBRE TRIBUTO
-    String etiquetaFinalGTE = "(/GTE)";
+    String etiquetaInicialGTE = "<GTE>";
+    String GTE_1 = "GTE_1>";//IDENTIFICADOR TRIBUTO 01-IVA
+    String GTE_2 = "GTE_2>";//NOMBRE TRIBUTO
+    String etiquetaFinalGTE = "</GTE>";
 
     
 
@@ -212,8 +212,8 @@ public class generaXml {
     String codPostalADQ = "";
     String poblacionADQ = "";
     String provinciaADQ = "";
-    String etiquetaInicialADQ = "(ADQ)";
-    String etiquetaFinalADQ = "(/ADQ)";
+    String etiquetaInicialADQ = "<ADQ>";
+    String etiquetaFinalADQ = "</ADQ>";
     String ADQ_1 = "";//IDENTIFICADOR TIPO PERSONA 1 JURIDICA 2 NATURAL
     String ADQ_2 = "";// INDENTIFICACION ADQUIRIENTE
     String ADQ_3 = "";//TIPO DOC IDENTIFICACION FISCAL 31 NIT - 13 CEDULA
@@ -243,32 +243,32 @@ public class generaXml {
     String TCR_1;
     String etiquetaFinalTCR;
     
-    String etiquetaInicialILA = "(ILA)";
+    String etiquetaInicialILA = "<ILA>";
     String ILA_1;
     String ILA_2;
     String ILA_3;
     String ILA_4;
-    String etiquetaFinalILA = "(/ILA)";
+    String etiquetaFinalILA = "</ILA>";
     
-    String etiquetaInicialDFA = "(DFA)";
+    String etiquetaInicialDFA = "<DFA>";
     String DFA_1;
     String DFA_2;
     String DFA_3;
     String DFA_4;
-    String etiquetaFinalDFA = "(/DFA)";
+    String etiquetaFinalDFA = "</DFA>";
     
-    String etiquetaInicialICR = "(ICR)";
+    String etiquetaInicialICR = "<ICR>";
     String ICR_1;
-    String etiquetaFinalICR = "(/ICR)";
+    String etiquetaFinalICR = "</ICR>";
     
-    String etiquetaInicialGTA = "(GTA)";
+    String etiquetaInicialGTA = "<GTA>";
     String GTA_1;
     String GTA_2;
-    String etiquetaFinalGTA = "(/GTA)";
+    String etiquetaFinalGTA = "</GTA>";
           
     
-    String etiquetaInicialLote = "(LOT)";
-    String etiquetaFinalLote = "(/LOT)";
+    String etiquetaInicialLote = "<LOT>";
+    String etiquetaFinalLote = "</LOT>";
     String lote = "";
     String nombreArchivo = "";
 
@@ -430,146 +430,146 @@ public class generaXml {
                 
                 encabezadoDocumento = "";
                 ENC_1 = "<ENC_1>";
-                ENC_2 = "<ENC_2:";
-                ENC_3 = "<ENC_3:";
-                ENC_4 = "<ENC_4:UBL 2.1";
-                ENC_5 = "<ENC_5:DIAN 2.1";
-                ENC_6 = "<ENC_6:";
-                ENC_7 = "<ENC_7:";
-                ENC_8 = "<ENC_8:";
-                ENC_9 = "<ENC_9:";
-                ENC_10 = "<ENC_10:";
-                ENC_11 = "<ENC_11:";
-                ENC_12 = "<ENC_12:";
-                ENC_13 = "<ENC_13:";
-                ENC_14 = "<ENC_14:";
-                ENC_15 = "<ENC_15:";
-                ENC_16 = "<ENC_16:";
-                ENC_17 = "<ENC_17:";
-                ENC_18 = "<ENC_18:";
-                ENC_20 = "<ENC_20:";
-                ENC_21 = "<ENC_21:";
-                ENC_21 = "<ENC_21:";
+                ENC_2 = "<ENC_2>";
+                ENC_3 = "<ENC_3>";
+                ENC_4 = "<ENC_4>UBL 2.1";
+                ENC_5 = "<ENC_5>DIAN 2.1";
+                ENC_6 = "<ENC_6>";
+                ENC_7 = "<ENC_7>";
+                ENC_8 = "<ENC_8>";
+                ENC_9 = "<ENC_9>";
+                ENC_10 = "<ENC_10>";
+                ENC_11 = "<ENC_11>";
+                ENC_12 = "<ENC_12>";
+                ENC_13 = "<ENC_13>";
+                ENC_14 = "<ENC_14>";
+                ENC_15 = "<ENC_15>";
+                ENC_16 = "<ENC_16>";
+                ENC_17 = "<ENC_17>";
+                ENC_18 = "<ENC_18>";
+                ENC_20 = "<ENC_20>";
+                ENC_21 = "<ENC_21>";
+                ENC_21 = "<ENC_21>";
                 
 
                 emisor = "";
-                etiquetaInicialEMI = "(EMI)";
-                etiquetaFinalEMI = "(/EMI)";
+                etiquetaInicialEMI = "<EMI>";
+                etiquetaFinalEMI = "</EMI>";
                 tipoPersona = "1";
                 tipoDocumentoEmisor = "";
 
-                EMI_1 = "EMI_1:1";
-                EMI_2 = "EMI_2:";
-                EMI_3 = "EMI_3:";
-                EMI_4 = "EMI_4:";               
+                EMI_1 = "<EMI_1>1";
+                EMI_2 = "<EMI_2>";
+                EMI_3 = "<EMI_3>";
+                EMI_4 = "<EMI_4>";               
 
                /*
                 String consulta = "select IDObservacion from tbClienteObservacion where IDCliente like "+"'"+cifCliente+"%"+"'";
-                r =fachada.ejecutarConsulta(consulta);
-                while (r.next()){
+                r =fachada.ejecutarConsulta<consulta);
+                while <r.next()){
                     obligaciones+=r.getString("IDObservacion")+";";
                 }                
-                EMI_4 = "EMI_4:";
+                EMI_4 = "<EMI_4>";
                 if(obligaciones.contains("O-48")){
                     EMI_4 +="48";
                 }else if(obligaciones.contains("O-49")){
                     EMI_4 +="49";
                 }
                */
-                EMI_5 = "EMI_5:";
-                EMI_6 = "EMI_6:";
-                EMI_7 = "EMI_7:";
-                EMI_8 = "EMI_8:";
-                EMI_9 = "EMI_9:";
-                EMI_10 = "EMI_10:";
-                EMI_11 = "EMI_11:";
-                EMI_12 = "EMI_12:";
-                EMI_13 = "EMI_13:";
-                EMI_14 = "EMI_14:";
-                EMI_15 = "EMI_15:";
-                EMI_16 = "EMI_16:";
-                EMI_17 = "EMI_17:";
-                //EMI_18 = "EMI_18:";
-                EMI_19 = "EMI_19:";
-                //EMI_20 = "EMI_20:";
-                EMI_21 = "EMI_21:";
-                EMI_22 = "EMI_22:";
-                EMI_23 = "EMI_23:";
-                EMI_24 = "EMI_24:";
-                EMI_25 = "EMI_25:";
+                EMI_5 = "<EMI_5>";
+                EMI_6 = "<EMI_6>";
+                EMI_7 = "<EMI_7>";
+                EMI_8 = "<EMI_8>";
+                EMI_9 = "<EMI_9>";
+                EMI_10 = "<EMI_10>";
+                EMI_11 = "<EMI_11>";
+                EMI_12 = "<EMI_12>";
+                EMI_13 = "<EMI_13>";
+                EMI_14 = "<EMI_14>";
+                EMI_15 = "<EMI_15>";
+                EMI_16 = "<EMI_16>";
+                EMI_17 = "<EMI_17>";
+                //EMI_18 = "<EMI_18>";
+                EMI_19 = "<EMI_19>";
+                //EMI_20 = "<EMI_20>";
+                EMI_21 = "<EMI_21>";
+                EMI_22 = "<EMI_22>";
+                EMI_23 = "<EMI_23>";
+                EMI_24 = "<EMI_24>";
+                EMI_25 = "<EMI_25>";
 
 
 
 
                
-                etiquetaInicialTAC = "(TAC)";
-                etiquetaFinalTAC = "(/TAC)";
-                TAC_1 = "TAC_1:"+obligacionesEmpresa+";";
+                etiquetaInicialTAC = "<TAC>";
+                etiquetaFinalTAC = "</TAC>";
+                TAC_1 = "<TAC_1>"+obligacionesEmpresa+";";
                 
-                DFE_1 = "DFE_1:";
-                DFE_2 = "DFE_2:";
-                DFE_3 = "DFE_3:";
+                DFE_1 = "<DFE_1>";
+                DFE_2 = "<DFE_2>";
+                DFE_3 = "<DFE_3>";
                     
                 camaraDeComercio = "";
-                etiquetaInicialICC = "(ICC)";
-                etiquetaFinalICC = "(/ICC)";
+                etiquetaInicialICC = "<ICC>";
+                etiquetaFinalICC = "</ICC>";
 
-                ICC_1 = "ICC_1:970015-16";
-                //ICC_2 = "ICC_2:";
-                //ICC_3 = "ICC_3:Yumbo";
-                //ICC_4 = "ICC_4:";
-                //ICC_5 = "ICC_5:Valle";
-                //ICC_6 = "ICC_6:CL 15 22 200";
-                //ICC_7 = "ICC_7:CO";
-                //ICC_8 = "ICC_8:Colombia";
-                ICC_9 = "ICC_9:"+prefijo+"";
+                ICC_1 = "ICC_1>970015-16";
+                //ICC_2 = "ICC_2>";
+                //ICC_3 = "ICC_3>Yumbo";
+                //ICC_4 = "ICC_4>";
+                //ICC_5 = "ICC_5>Valle";
+                //ICC_6 = "ICC_6>CL 15 22 200";
+                //ICC_7 = "ICC_7>CO";
+                //ICC_8 = "ICC_8>Colombia";
+                ICC_9 = "ICC_9>"+prefijo+"";
 
                 camaraDeComercio += etiquetaInicialICC + ICC_1 + etiquetaFinalICC;
 
                 contactoEmisor = "";
-                etiquetaInicialCDE = "(CDE)";
-                etiquetaFinalCDE = "(/CDE)";
-                CDE_1 = "CDE_1:1";
-                CDE_2 = "CDE_2:Maria Andrea Cardona";
-                CDE_3 = "CDE_3:";
-                CDE_4 = "CDE_4:andreacardona@k-listo.com";
+                etiquetaInicialCDE = "<CDE>";
+                etiquetaFinalCDE = "</CDE>";
+                CDE_1 = "CDE_1>1";
+                CDE_2 = "CDE_2>Maria Andrea Cardona";
+                CDE_3 = "CDE_3>";
+                CDE_4 = "CDE_4>andreacardona@k-listo.com";
 
                 contactoEmisor += etiquetaInicialCDE + CDE_1 + CDE_2 + CDE_4 + etiquetaFinalCDE;
                 adquiriente = "";
-                etiquetaInicialADQ = "(ADQ)";
-                etiquetaFinalADQ = "(/ADQ)";
+                etiquetaInicialADQ = "<ADQ>";
+                etiquetaFinalADQ = "</ADQ>";
 
-                ADQ_1 = "ADQ_1:";
-                ADQ_2 = "ADQ_2:";
-                ADQ_3 = "ADQ_3:";
-                ADQ_4 = "ADQ_4:";
-                ADQ_6 = "ADQ_6:";
-                ADQ_7 = "ADQ_7:";
-                ADQ_8 = "ADQ_8:";
-                ADQ_10 = "ADQ_10:";
-                ADQ_11 = "ADQ_11:";
-                ADQ_13 = "ADQ_13:";
-                ADQ_14 = "ADQ_14:";
-                ADQ_15 = "ADQ_15:";
-                ADQ_19 = "ADQ_19:";
-                ADQ_21 = "ADQ_21:";
-                ADQ_22 = "ADQ_22:";
-                ADQ_23 = "ADQ_23:";
+                ADQ_1 = "ADQ_1>";
+                ADQ_2 = "ADQ_2>";
+                ADQ_3 = "ADQ_3>";
+                ADQ_4 = "ADQ_4>";
+                ADQ_6 = "ADQ_6>";
+                ADQ_7 = "ADQ_7>";
+                ADQ_8 = "ADQ_8>";
+                ADQ_10 = "ADQ_10>";
+                ADQ_11 = "ADQ_11>";
+                ADQ_13 = "ADQ_13>";
+                ADQ_14 = "ADQ_14>";
+                ADQ_15 = "ADQ_15>";
+                ADQ_19 = "ADQ_19>";
+                ADQ_21 = "ADQ_21>";
+                ADQ_22 = "ADQ_22>";
+                ADQ_23 = "ADQ_23>";
                 
-                ILA_1 = "ILA_1:";
-                ILA_2 = "ILA_2:";
-                ILA_3 = "ILA_3:";
-                ILA_4 = "ILA_4:";
+                ILA_1 = "ILA_1>";
+                ILA_2 = "ILA_2>";
+                ILA_3 = "ILA_3>";
+                ILA_4 = "ILA_4>";
                 
-                DFA_1 = "DFA_1:";
-                DFA_2 = "DFA_2:";
-                DFA_3 = "DFA_3:";
-                DFA_4 = "DFA_4:";
+                DFA_1 = "DFA_1>";
+                DFA_2 = "DFA_2>";
+                DFA_3 = "DFA_3>";
+                DFA_4 = "DFA_4>";
                 
-                ICR_1 = "ICR_1:";
+                ICR_1 = "ICR_1>";
                 
-                GTA_1 = "GTA_1:";
-                GTA_2 = "GTA_2:";
+                GTA_1 = "GTA_1>";
+                GTA_2 = "GTA_2>";
                     
                 ENC_1 += "INVOICE";
                 ENC_2 += cif + "";
@@ -586,7 +586,7 @@ public class generaXml {
                 ENC_14 += "";
                 r = fachada.ejecutarConsulta("select count(*) as qFilas from tbFacturaVentaLinea where idFactura ="+datosDocumento.getString("IDFactura"));                
                 while (r.next()){
-                    ENC_15 = "<ENC_15:" + r.getString("qFilas")+"";
+                    ENC_15 = "<ENC_15>" + r.getString("qFilas")+"";
                 }
                 
                 ENC_16 += fechaVencimientoFactura + "";
@@ -644,8 +644,8 @@ public class generaXml {
                 DFE_3 +=codISOPais+"";
                 
                 if(obligacionesEmpresa.contains("O-48")){
-                    GTE_1 ="GTE_1:01";
-                    GTE_2 ="GTE_2:Impuesto de Valor Agregado";
+                    GTE_1 ="GTE_1>01";
+                    GTE_2 ="GTE_2>Impuesto de Valor Agregado";
                 }
                 
                 ADQ_1 += tipoPersonaADQ + "";
@@ -658,14 +658,14 @@ public class generaXml {
                     obligacionesADQ+=r.getString("IDObservacion")+";";
                 }
                 
-                ADQ_4 = "ADQ_4:";
+                ADQ_4 = "ADQ_4>";
                 if(obligacionesADQ.contains("O-48")){
                     ADQ_4 +="48";
                 }else if(obligacionesADQ.contains("O-49")){
                     ADQ_4 +="49";
                 }
                 
-                ADQ_6 = "ADQ_6:" + razonSocialADQ + "";
+                ADQ_6 = "ADQ_6>" + razonSocialADQ + "";
                 ADQ_7 += nombreComercialADQ + "";
                 ADQ_8 += razonSocialADQ + "";
                 ADQ_10 += direccionADQ + "";
@@ -680,9 +680,9 @@ public class generaXml {
 
 
 
-                etiquetaInicialTCR = "(TCR)";
-                TCR_1 = "TCR_1:"+ obligacionesADQ + "";
-                etiquetaFinalTCR = "(/TCR)";
+                etiquetaInicialTCR = "<TCR>";
+                TCR_1 = "TCR_1>"+ obligacionesADQ + "";
+                etiquetaFinalTCR = "</TCR>";
                 
                 ILA_1 += razonSocialADQ + "";
                 ILA_2 += cifCliente + "";
@@ -695,20 +695,20 @@ public class generaXml {
                 DFA_3 += codPostal + "";
                 DFA_4 += codPostal + "";
                 
-                ICR_1 = "ICR:112345";
+                ICR_1 = "ICR>112345";
                 
                 if(obligacionesADQ.contains("O-48")){
-                    GTA_1 ="GTA_1:01";
-                    GTA_2 ="GTA_2:Impuesto de Valor Agregado";
+                    GTA_1 ="GTA_1>01";
+                    GTA_2 ="GTA_2>Impuesto de Valor Agregado";
                 }
                         
-                String etiquetaInicialCDA = "(CDA)";
-                String etiquetaFinalCDA = "(/CDA)";
+                String etiquetaInicialCDA = "<CDA>";
+                String etiquetaFinalCDA = "</CDA>";
                 String contactoADQ = "";
-                String CDA_1 = "CDA_1:1;";
-                String CDA_2 = "CDA_1:2;";
-                String CDA_3 = "CDA_1:3;";
-                String CDA_4 = "CDA_1:4;";
+                String CDA_1 = "CDA_1>1;";
+                String CDA_2 = "CDA_1>2;";
+                String CDA_3 = "CDA_1>3;";
+                String CDA_4 = "CDA_1>4;";
 
                 contactoADQ += etiquetaInicialCDA;
                 contactoADQ += CDA_1;
@@ -741,8 +741,8 @@ public class generaXml {
 
                 ////INFORMACION SOBRE LOS ITEM DE LA FACTURA
                 String itemsFactura = "";
-                String etiquetaInicialITE = "(ITE)";
-                String etiquetaFinalITE = "(/ITE)";
+                String etiquetaInicialITE = "<ITE>";
+                String etiquetaFinalITE = "</ITE>";
                 lote = "";
                 int regalo = 0;
 
@@ -775,22 +775,22 @@ public class generaXml {
 
 
                 String totalLineas = "";
-                String etiquetaInicialTOT = "(TOT)";
-                String etiquetaFinalTOT = "(/TOT)";
-                String TOT_1 = "TOT_1:";
-                String TOT_2 = "TOT_2:";
-                String TOT_3 = "TOT_3:";
-                String TOT_4 = "TOT_4:";
-                String TOT_5 = "TOT_5:";
-                String TOT_6 = "TOT_6:";
-                String TOT_7 = "TOT_7:";
-                String TOT_8 = "TOT_8:";
-                String TOT_9 = "TOT_9:";
-                String TOT_10 = "TOT_10:";
-                String TOT_11 = "TOT_11:";
-                String TOT_12 = "TOT_12:";
-                String TOT_13 = "TOT_13:";
-                String TOT_14 = "TOT_14:";
+                String etiquetaInicialTOT = "<TOT>";
+                String etiquetaFinalTOT = "</TOT>";
+                String TOT_1 = "TOT_1>";
+                String TOT_2 = "TOT_2>";
+                String TOT_3 = "TOT_3>";
+                String TOT_4 = "TOT_4>";
+                String TOT_5 = "TOT_5>";
+                String TOT_6 = "TOT_6>";
+                String TOT_7 = "TOT_7>";
+                String TOT_8 = "TOT_8>";
+                String TOT_9 = "TOT_9>";
+                String TOT_10 = "TOT_10>";
+                String TOT_11 = "TOT_11>";
+                String TOT_12 = "TOT_12>";
+                String TOT_13 = "TOT_13>";
+                String TOT_14 = "TOT_14>";
 
                 DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
                 simbolos.setDecimalSeparator('.');
@@ -808,38 +808,38 @@ public class generaXml {
                 totalLineas += TOT_1 + TOT_2 + TOT_3 + TOT_4 + TOT_5 + TOT_6 + etiquetaFinalTOT;
 
                 String totalImpuestos = "";
-                String etiInicialTIM = "(TIM)";
-                String etiFinalTIM = "(/TIM)";
-                String TIM_1 = "TIM_1:";
-                String TIM_2 = "TIM_1:";
-                String TIM_3 = "TIM_1:";
+                String etiInicialTIM = "<TIM>";
+                String etiFinalTIM = "</TIM>";
+                String TIM_1 = "TIM_1>";
+                String TIM_2 = "TIM_1>";
+                String TIM_3 = "TIM_1>";
 
                 ////DATOS DE RESOLUCION DE FACTURACION
                 String resolucionFacturacion = "";
-                String etiquetaInicialDRF = "(DRF)";
-                String etiquetaFinalDRF = "(/DRF)";
+                String etiquetaInicialDRF = "<DRF>";
+                String etiquetaFinalDRF = "</DRF>";
 
-                String DRF_1 = "DRF_1:9000000035441634;";
-                String DRF_2 = "DRF_2:2018-12-12;";
-                String DRF_3 = "DRF_3:";
-                //String DRF_4 = "DRF_4:" + prefijo + "";
-                String DRF_4 = "DRF_4:PRUE";
-                String DRF_5 = "DRF_5:980000000;";
-                String DRF_6 = "DRF_6:985000000;";
+                String DRF_1 = "DRF_1>9000000035441634;";
+                String DRF_2 = "DRF_2>2018-12-12;";
+                String DRF_3 = "DRF_3>";
+                //String DRF_4 = "DRF_4>" + prefijo + "";
+                String DRF_4 = "DRF_4>PRUE";
+                String DRF_5 = "DRF_5>980000000;";
+                String DRF_6 = "DRF_6>985000000;";
 
                 resolucionFacturacion += etiquetaInicialDRF;
                 resolucionFacturacion += DRF_4;
                 resolucionFacturacion += etiquetaFinalDRF;
 
                 ////NOTAS QUE IRAN EN LA FACTURA TIPO RETENEDOR - REGIMEN - IVA ETC
-                String etiquetaInicialNOT = "(NOT)";
-                String etiquetaFinalNOT = "(/NOT)";
-                String notaFactura = "NOT_1:NO SOMOS GRANDES CONTRIBUYENTES - REGIMEN COMUN - CIIU 4631;";
+                String etiquetaInicialNOT = "<NOT>";
+                String etiquetaFinalNOT = "</NOT>";
+                String notaFactura = "NOT_1>NO SOMOS GRANDES CONTRIBUYENTES - REGIMEN COMUN - CIIU 4631;";
 
                 ////INFORMACION PARA CARVAJAL
-                String etiquetaInicialCTS = "(CTS)";
-                String etiquetaFinalCTS = "(/CTS)";
-                String infoCarvajal = "CTS_1:CGEN01";
+                String etiquetaInicialCTS = "<CTS>";
+                String etiquetaFinalCTS = "</CTS>";
+                String infoCarvajal = "CTS_1>CGEN01";
 
                // System.out.print(encabezadoConexion + encabezadoDocumento + emisor + adquiriente + infoTributariaADQ + etiquetaFinalADQ + totalLineas + resolucionFacturacion + notaFactura + infoCarvajal + itemsFactura + etiquetaFinDoc);
 
@@ -911,11 +911,11 @@ public class generaXml {
                 /////////////////////////////////
                 writer.println(etiquetaInicialICC);
                 writer.println(ICC_1+"</ICC_1>");
-                //writer.println("ICC_3:Yumbo");
-                //writer.println("ICC_5:Valle");
-                //writer.println("ICC_6:CL 15 22 200");
-                //writer.println("ICC_7:CO");
-                //writer.println("ICC_8:Colombia");
+                //writer.println("ICC_3>Yumbo");
+                //writer.println("ICC_5>Valle");
+                //writer.println("ICC_6>CL 15 22 200");
+                //writer.println("ICC_7>CO");
+                //writer.println("ICC_8>Colombia");
                 writer.println(ICC_9+"</ICC_9>");
                 writer.println(etiquetaFinalICC);
                 //////////////////////////////////
@@ -1049,27 +1049,27 @@ public class generaXml {
 
                     cantidadLineas++;
 
-                    ITE_1 = "ITE_1:" + cantidadLineas + "";
+                    ITE_1 = "ITE_1>" + cantidadLineas + "";
                     if (regalo == 0) {
-                        ITE_2 = "ITE_2:FALSE";
+                        ITE_2 = "ITE_2>FALSE";
                     } else {
-                        ITE_2 = "ITE_2:TRUE";
+                        ITE_2 = "ITE_2>TRUE";
                     }
-                    ITE_3 = "ITE_3:" + cantidad + "";
-                    ITE_4 = "ITE_4:" + idUdMedida + "";
-                    ITE_5 = "ITE_5:" + (cantidad * precio) + "";
-                    ITE_6 = "ITE_6:" + moneda + "";
-                    ITE_7 = "ITE_7:" + precio + "";
-                    ITE_8 = "ITE_8:" + moneda + "";
-                    ITE_9 = "ITE_9:" + idArticulo + "";
-                    ITE_11 = "ITE_11:" + descArticulo + "";
-                    ITE_19 = "ITE_19:" + importe + "";
-                    ITE_20 = "ITE_20:" + moneda + "";
+                    ITE_3 = "ITE_3>" + cantidad + "";
+                    ITE_4 = "ITE_4>" + idUdMedida + "";
+                    ITE_5 = "ITE_5>" + (cantidad * precio) + "";
+                    ITE_6 = "ITE_6>" + moneda + "";
+                    ITE_7 = "ITE_7>" + precio + "";
+                    ITE_8 = "ITE_8>" + moneda + "";
+                    ITE_9 = "ITE_9>" + idArticulo + "";
+                    ITE_11 = "ITE_11>" + descArticulo + "";
+                    ITE_19 = "ITE_19>" + importe + "";
+                    ITE_20 = "ITE_20>" + moneda + "";
 
                     itemsFactura += etiquetaInicialITE + ITE_1 + ITE_2 + ITE_3 + ITE_4 + ITE_5 + ITE_6 + ITE_7 + ITE_8 + ITE_9 + ITE_11 + ITE_19 + ITE_20;
 
                     if (lote != null) {
-                        String loteItem = "(LOT)" + "LOT_1:" + lote + "";
+                        String loteItem = "<LOT>" + "LOT_1>" + lote + "";
                         itemsFactura += loteItem;
                     }
 
@@ -1093,7 +1093,7 @@ public class generaXml {
 
                 if (lote != null) {
                     writer.println(etiquetaInicialLote);
-                    writer.println("LOT_1:"+lote+";");
+                    writer.println("LOT_1>"+lote+";");
                     writer.println(etiquetaFinalLote);
                 }
                 ////////////////////////////////////////
