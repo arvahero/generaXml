@@ -287,12 +287,8 @@ public class generaXml {
         }
 
     }
-/*
+
     public void generarEncabezadoConexion(int tipo) {
-        companyID = "[901143311]";
-        accountID = "[901143311-01]";
-        password = "[Demo.Col2018.1]";
-        correo = "[programacion@facturatech.co]";
         tipoDocumento = "";
         if (tipo == 0) {
             tipoDocumento = "[FACTURA]";
@@ -309,7 +305,7 @@ public class generaXml {
 
         //System.out.print(encabezadoConexion);
     }
-    */
+  
 
     public void generarConsulta() {
         fachada.establecerConexion();
@@ -323,11 +319,11 @@ public class generaXml {
                 + "CG.IDPais,FVC.IDFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
                 + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.IDContador NOT LIKE 'N%' and FechaFactura >=CONVERT(date,GETDATE()) and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 */
-        String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbClienteObservacion.IDObservacion as clasificacionCliente, C.IDTipoCliente,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
+        String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbClienteObservacion.IDObservacion as clasificacionCliente,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
                 + "C.Provincia as DptoC,C.IDPais as PaisC,FVCCG.CodPostal, FVCCG.NFactura,SUBSTRING(FVCCG.NFactura,LEN(FVCCG.IDContador)+1,LEN(FVCCG.NFactura)-LEN(FVCCG.IDContador)) "
                 + "AS Folio,CONVERT(CHAR(10),FVCCG.FechaFactura,23) as Fecha,CONVERT(CHAR(10), FVCCG.FechaFactura,108) as Hora,FVCCG.FechaFactura,CONVERT(CHAR(10),FVCCG.FechaVencimiento,23) as FechaV,FVCCG.FechaVencimiento,FVCCG.IDContador,FVCCG.IDMoneda,"
                 + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
-                + "left JOIN tbClienteObservacion on C.IDCliente =  tbClienteObservacion.IDCliente JOIN"
+                + "left JOIN tbClienteObservacion on C.IDGrupoCliente =  tbClienteObservacion.IDCliente JOIN"
                 + "(select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
                 + "CG.IDPais,FVC.IDFactura, FVC.TipoFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
                 + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.IDContador NOT LIKE 'N%' and FVCCG.FechaFactura >=CONVERT(date,'2020-02-29') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
@@ -347,7 +343,7 @@ public class generaXml {
 
         generarDatosEmpresa(datosEmpresa);
 
-
+        generarEncabezadoConexion(0);
         generarFacturas(resultadoFacturas, datosEmpresa);
 
         //generarNotasCredito(resultadoNotasC, datosEmpresa);
@@ -504,7 +500,7 @@ public class generaXml {
                
                 etiquetaInicialTAC = "<TAC>";
                 etiquetaFinalTAC = "</TAC>";
-                TAC_1 = "<TAC_1>"+obligacionesEmpresa+";";
+                TAC_1 = "<TAC_1>"+obligacionesEmpresa;
                 
                 DFE_1 = "<DFE_1>";
                 DFE_2 = "<DFE_2>";
@@ -819,13 +815,13 @@ public class generaXml {
                 String etiquetaInicialDRF = "<DRF>";
                 String etiquetaFinalDRF = "</DRF>";
 
-                String DRF_1 = "<DRF_1>9000000035441634;";
-                String DRF_2 = "<DRF_2>2018-12-12;";
+                String DRF_1 = "<DRF_1>9000000035441634";
+                String DRF_2 = "<DRF_2>2018-12-12";
                 String DRF_3 = "<DRF_3>";
                 //String DRF_4 = "DRF_4>" + prefijo + "";
                 String DRF_4 = "<DRF_4>PRUE";
-                String DRF_5 = "<DRF_5>980000000;";
-                String DRF_6 = "<DRF_6>985000000;";
+                String DRF_5 = "<DRF_5>980000000";
+                String DRF_6 = "<DRF_6>985000000";
 
                 resolucionFacturacion += etiquetaInicialDRF;
                 resolucionFacturacion += DRF_4;
@@ -834,7 +830,7 @@ public class generaXml {
                 ////NOTAS QUE IRAN EN LA FACTURA TIPO RETENEDOR - REGIMEN - IVA ETC
                 String etiquetaInicialNOT = "<NOT>";
                 String etiquetaFinalNOT = "</NOT>";
-                String notaFactura = "<NOT_1>NO SOMOS GRANDES CONTRIBUYENTES - REGIMEN COMUN - CIIU 4631;";
+                String notaFactura = "<NOT_1>NO SOMOS GRANDES CONTRIBUYENTES - REGIMEN COMUN - CIIU 4631";
 
                 ////INFORMACION PARA CARVAJAL
                 String etiquetaInicialCTS = "<CTS>";
@@ -843,12 +839,7 @@ public class generaXml {
 
                // System.out.print(encabezadoConexion + encabezadoDocumento + emisor + adquiriente + infoTributariaADQ + etiquetaFinalADQ + totalLineas + resolucionFacturacion + notaFactura + infoCarvajal + itemsFactura + etiquetaFinDoc);
 
-                writer.println(companyID);
-                writer.println(accountID);
-                writer.println(cufe);
                 writer.println(tipoDocumento);
-                writer.println(correo);
-                writer.println(password);
                 //////////////////////////////////
                 ///////ENCABEZADO
                 /////////////////////////////////
@@ -1018,13 +1009,13 @@ public class generaXml {
                 //////////////////////////////////////////
                 ///////NOT
                 writer.println(etiquetaInicialNOT);
-                writer.println(notaFactura);
+                writer.println(notaFactura+"</NOT_1>");
                 writer.println(etiquetaFinalNOT);
                 ///////////////////////////////////////////////
                 ///////CTS
                 ///////////////////////////////////////////////
                 writer.println(etiquetaInicialCTS);
-                writer.println(infoCarvajal);
+                writer.println(infoCarvajal+"</CTS_1>");
                 writer.println(etiquetaFinalCTS);
                 //////////////////////////////////////////////
                 //////ITE
@@ -1075,18 +1066,18 @@ public class generaXml {
 
                     itemsFactura += etiquetaFinalITE;
                                     writer.println(etiquetaInicialITE);
-                writer.println(ITE_1);
-                writer.println(ITE_2);
-                writer.println(ITE_3);
-                writer.println(ITE_4);
-                writer.println(ITE_5);
-                writer.println(ITE_6);
-                writer.println(ITE_7);
-                writer.println(ITE_8);
-                writer.println(ITE_9);
-                writer.println(ITE_11);
-                writer.println(ITE_19);
-                writer.println(ITE_20);
+                writer.println(ITE_1+"</ITE_1>");
+                writer.println(ITE_2+"</ITE_2>");
+                writer.println(ITE_3+"</ITE_3>");
+                writer.println(ITE_4+"</ITE_4>");
+                writer.println(ITE_5+"</ITE_5>");
+                writer.println(ITE_6+"</ITE_6>");
+                writer.println(ITE_7+"</ITE_7>");
+                writer.println(ITE_8+"</ITE_8>");
+                writer.println(ITE_9+"</ITE_9>");
+                writer.println(ITE_11+"</ITE_11>");
+                writer.println(ITE_19+"</ITE_19>");
+                writer.println(ITE_20+"</ITE_20>");
                 //////////////////////////////////////
                 ///////LOTE
                 //////////////////////////////////////
