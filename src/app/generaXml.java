@@ -198,7 +198,14 @@ public class generaXml {
     String GTE_1 = "<GTE_1>";//IDENTIFICADOR TRIBUTO 01-IVA
     String GTE_2 = "<GTE_2>";//NOMBRE TRIBUTO
     String etiquetaFinalGTE = "</GTE>";
-
+    
+    
+    /////////////////////////////////////////////
+    //////INFORMACION DESCUENTOS Y CARGOS
+    String etiquetaInicialIDE = "<IDE>";
+    String IDE_1 = "<IDE_1>";//IDENTIFICADOR TRIBUTO 01-IVA
+    String IDE_2 = "<IDE_2>";//NOMBRE TRIBUTO
+    String etiquetaFinalIDE = "</IDE>";
     
 
     /////////////////////////////////////////////
@@ -326,7 +333,7 @@ public class generaXml {
                 + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
                 + "JOIN (select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
                 + "CG.IDPais,FVC.IDFactura, FVC.TipoFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
-                + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.IDContador NOT LIKE 'N%' and FVCCG.FechaFactura >=CONVERT(date,'2020-02-29') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
+                + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.FechaFactura >=CONVERT(date,'2020-02-29') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 
         ResultSet resultadoFacturas = fachada.ejecutarConsulta(consultaFacturas);
         ResultSet datosEmpresa = fachada.ejecutarConsulta("select DescEmpresa,Cif,Direccion,web,CodPostal, Poblacion, provincia as Departamento,substring(codpostal,1,2) as Provincia,tbDatosEmpresa.IDPais, tbMaestroPais.CodigoISO, DescPais, IDCNAE AS CIIU, DatosRegistrales as Obligaciones,IDCAE as TipoDoc from tbDatosEmpresa inner join tbMaestroPais on tbDatosEmpresa.IDPais = tbMaestroPais.IDPais");
@@ -393,7 +400,7 @@ public class generaXml {
                     inicializarArchivo("//" + nombreArchivo + ".xml");
                 }else
                 inicializarArchivo("C:\\spool\\" + nombreArchivo + ".xml");
-                obligacionesADQ ="";
+                obligacionesADQ = "";
                 //Datos Encabezado ENC
                 //cifCliente = datosDocumento.getString("CifCliente");
                 String id = datosDocumento.getString("CifCliente");
@@ -660,17 +667,23 @@ public class generaXml {
                 }
                 
                
-                r =fachada.ejecutarConsulta("select tbClienteObservacion.IDObservacion, Entidad from tbClienteObservacion inner join tbMaestroObservacion on tbClienteObservacion.IDObservacion = tbMaestroObservacion.IDObservacion where IDCliente = "+"'"+cifCliente+"' and Entidad = "+"'"+"ClienteObservacion"+"'");
+                r =fachada.ejecutarConsulta("select tbClienteObservacion.IDObservacion as obligacion, Entidad from tbClienteObservacion inner join tbMaestroObservacion on tbClienteObservacion.IDObservacion = tbMaestroObservacion.IDObservacion where IDCliente = "+"'"+cifCliente+"' and Entidad = "+"'"+"ClienteObservacion"+"'");
                 
                 while (r.next()){
-                    obligacionesADQ+=r.getString("IDObservacion")+";";
+                    obligacionesADQ+=r.getString("obligacion")+";";
+                }
+                if(obligacionesADQ.isEmpty()){
+                    mensajesErrorCamposCliente("obligaciones",id);
                 }
                 
              
-                r =fachada.ejecutarConsulta("select tbClienteObservacion.IDObservacion, Entidad from tbClienteObservacion inner join tbMaestroObservacion on tbClienteObservacion.IDObservacion = tbMaestroObservacion.IDObservacion where IDCliente = "+"'"+cifCliente+"' and Entidad = "+"'"+"LatTerceros"+"'");
+                r =fachada.ejecutarConsulta("select tbClienteObservacion.IDObservacion as tipoPersona, Entidad from tbClienteObservacion inner join tbMaestroObservacion on tbClienteObservacion.IDObservacion = tbMaestroObservacion.IDObservacion where IDCliente = "+"'"+cifCliente+"' and Entidad = "+"'"+"LatTerceros"+"'");
                 
                 while (r.next()){
-                    tipoPersonaADQ=r.getString("IDObservacion");
+                    tipoPersonaADQ=r.getString("tipoPersona");
+                }
+                if(tipoPersonaADQ.isEmpty()){
+                    mensajesErrorCamposCliente("tipo persona",id);
                 }
 
                 
@@ -827,6 +840,7 @@ public class generaXml {
                 TOT_5 += formato.format(totalFactura) + "";
                 TOT_6 += moneda + "";
                 TOT_7 += valorDto1 + "";
+                TOT_8 += moneda + "";
 
                 totalLineas += TOT_1 + TOT_2 + TOT_3 + TOT_4 + TOT_5 + TOT_6 + etiquetaFinalTOT;
 
