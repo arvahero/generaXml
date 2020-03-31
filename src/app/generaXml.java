@@ -285,6 +285,77 @@ public class generaXml {
 
     String contenidoDocumento = "";
     String tipoFactura= "";
+    
+ ////INFORMACION SOBRE LOS ITEM DE LA FACTURA
+    String itemsFactura = "";
+    String etiquetaInicialITE = "<ITE>";
+    String etiquetaFinalITE = "</ITE>";
+    int regalo = 0;
+
+    String ITE_1 = "";
+    String ITE_2 = "";
+    String ITE_3 = "";
+    String ITE_4 = "";
+    String ITE_5 = "";
+    String ITE_6 = "";
+    String ITE_7 = "";
+    String ITE_8 = "";
+    String ITE_9 = "";
+    String ITE_10 = "";
+    String ITE_11 = "";
+    String ITE_12 = "";
+    String ITE_13 = "";
+    String ITE_14 = "";
+    String ITE_15 = "";
+    String ITE_16 = "";
+    String ITE_17 = "";
+    String ITE_18 = "";
+    String ITE_19 = "";
+    String ITE_20 = "";
+    String ITE_21 = "";
+    String ITE_22 = "";
+    String ITE_23 = "";
+    String ITE_24 = "";
+    String ITE_25 = "";
+    String ITE_26 = "";
+
+
+    String totalLineas = "";
+    String etiquetaInicialTOT = "<TOT>";
+    String etiquetaFinalTOT = "</TOT>";
+    String TOT_1 = "<TOT_1>";
+    String TOT_2 = "<TOT_2>";
+    String TOT_3 = "<TOT_3>";
+    String TOT_4 = "<TOT_4>";
+    String TOT_5 = "<TOT_5>";
+    String TOT_6 = "<TOT_6>";
+    String TOT_7 = "<TOT_7>";
+    String TOT_8 = "<TOT_8>";
+    String TOT_9 = "<TOT_9>";
+    String TOT_10 = "<TOT_10>";
+    String TOT_11 = "<TOT_11>";
+    String TOT_12 = "<TOT_12>";
+    String TOT_13 = "<TOT_13>";
+    String TOT_14 = "<TOT_14>";
+                
+////////////////////////////////////////////////
+////////////////DESCUENTOS
+/////////////////////////////////////////////////
+    String etiquetaInicialDSC = "<DSC>";
+    String etiquetaFinalDSC = "</DSC>";
+    String DSC_1 = "<DSC_1>";
+    String DSC_2 = "<DSC_2>";
+    String DSC_3 = "<DSC_3>";
+    String DSC_4 = "<DSC_4>";
+    String DSC_5 = "<DSC_5>";
+    String DSC_6 = "<DSC_6>";
+    String DSC_7 = "<DSC_7>";
+    String DSC_8 = "<DSC_8>";
+    String DSC_9 = "<DSC_9>";
+    String DSC_10 = "<DSC_10>";
+    double totalDctoFactura = 0.0;
+    double tarifaDctoFactura = 0.0;
+                
 
     public void inicializarArchivo(String ruta) {
 
@@ -330,8 +401,8 @@ public class generaXml {
         String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
                 + "C.Provincia as DptoC,C.IDPais as PaisC,FVCCG.CodPostal, FVCCG.NFactura,SUBSTRING(FVCCG.NFactura,LEN(FVCCG.IDContador)+1,LEN(FVCCG.NFactura)-LEN(FVCCG.IDContador)) "
                 + "AS Folio,CONVERT(CHAR(10),FVCCG.FechaFactura,23) as Fecha,CONVERT(CHAR(10), FVCCG.FechaFactura,108) as Hora,FVCCG.FechaFactura,CONVERT(CHAR(10),FVCCG.FechaVencimiento,23) as FechaV,FVCCG.FechaVencimiento,FVCCG.IDContador,FVCCG.IDMoneda,"
-                + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
-                + "JOIN (select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
+                + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.ImpDtoFactura,FVCCG.DtoFactura,FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
+                + "JOIN (select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DtoFactura,FVC.ImpDtoFactura,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
                 + "CG.IDPais,FVC.IDFactura, FVC.TipoFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
                 + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.FechaFactura >=CONVERT(date,'2020-02-29') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 
@@ -441,6 +512,8 @@ public class generaXml {
                 //Totales
                 baseImponible = datosDocumento.getDouble("baseImponible");
                 totalFactura = datosDocumento.getDouble("impTotal");
+                totalDctoFactura = datosDocumento.getDouble("impDtoFactura");
+                tarifaDctoFactura = datosDocumento.getDouble("DtoFactura")/100;
 
                 prefijo = datosDocumento.getString("IDcontador");
                 
@@ -776,61 +849,66 @@ public class generaXml {
                 double mntImpuesto = 0.00;
 
                 ////INFORMACION SOBRE LOS ITEM DE LA FACTURA
-                String itemsFactura = "";
-                String etiquetaInicialITE = "<ITE>";
-                String etiquetaFinalITE = "</ITE>";
+                itemsFactura = "";
+                etiquetaInicialITE = "<ITE>";
+                etiquetaFinalITE = "</ITE>";
                 lote = "";
-                int regalo = 0;
+                regalo = 0;
 
-                String ITE_1 = "";
-                String ITE_2 = "";
-                String ITE_3 = "";
-                String ITE_4 = "";
-                String ITE_5 = "";
-                String ITE_6 = "";
-                String ITE_7 = "";
-                String ITE_8 = "";
-                String ITE_9 = "";
-                String ITE_10 = "";
-                String ITE_11 = "";
-                String ITE_12 = "";
-                String ITE_13 = "";
-                String ITE_14 = "";
-                String ITE_15 = "";
-                String ITE_16 = "";
-                String ITE_17 = "";
-                String ITE_18 = "";
-                String ITE_19 = "";
-                String ITE_20 = "";
-                String ITE_21 = "";
-                String ITE_22 = "";
-                String ITE_23 = "";
-                String ITE_24 = "";
-                String ITE_25 = "";
-                String ITE_26 = "";
+                ITE_1 = "";
+                ITE_2 = "";
+                ITE_3 = "";
+                ITE_4 = "";
+                ITE_5 = "";
+                ITE_6 = "";
+                ITE_7 = "";
+                ITE_8 = "";
+                ITE_9 = "";
+                ITE_10 = "";
+                ITE_11 = "";
+                ITE_12 = "";
+                ITE_13 = "";
+                ITE_14 = "";
+                ITE_15 = "";
+                ITE_16 = "";
+                ITE_17 = "";
+                ITE_18 = "";
+                ITE_19 = "";
+                ITE_20 = "";
+                ITE_21 = "";
+                ITE_22 = "";
+                ITE_23 = "";
+                ITE_24 = "";
+                ITE_25 = "";
+                ITE_26 = "";
 
 
-                String totalLineas = "";
-                String etiquetaInicialTOT = "<TOT>";
-                String etiquetaFinalTOT = "</TOT>";
-                String TOT_1 = "<TOT_1>";
-                String TOT_2 = "<TOT_2>";
-                String TOT_3 = "<TOT_3>";
-                String TOT_4 = "<TOT_4>";
-                String TOT_5 = "<TOT_5>";
-                String TOT_6 = "<TOT_6>";
-                String TOT_7 = "<TOT_7>";
-                String TOT_8 = "<TOT_8>";
-                String TOT_9 = "<TOT_9>";
-                String TOT_10 = "<TOT_10>";
-                String TOT_11 = "<TOT_11>";
-                String TOT_12 = "<TOT_12>";
-                String TOT_13 = "<TOT_13>";
-                String TOT_14 = "<TOT_14>";
+                totalLineas = "";
+                etiquetaInicialTOT = "<TOT>";
+                etiquetaFinalTOT = "</TOT>";
+                TOT_1 = "<TOT_1>";
+                TOT_2 = "<TOT_2>";
+                TOT_3 = "<TOT_3>";
+                TOT_4 = "<TOT_4>";
+                TOT_5 = "<TOT_5>";
+                TOT_6 = "<TOT_6>";
+                TOT_7 = "<TOT_7>";
+                TOT_8 = "<TOT_8>";
+                TOT_9 = "<TOT_9>";
+                TOT_10 = "<TOT_10>";
+                TOT_11 = "<TOT_11>";
+                TOT_12 = "<TOT_12>";
+                TOT_13 = "<TOT_13>";
+                TOT_14 = "<TOT_14>";
 
                 DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
                 simbolos.setDecimalSeparator('.');
                 DecimalFormat formato = new DecimalFormat("#.00", simbolos);
+                
+
+                    
+                    totalDcto= tarifaDctoFactura * importeBruto;
+                
 
                 importeBruto = baseImponible + totalDcto;
                 TOT_1 += formato.format(importeBruto) + "";
@@ -841,6 +919,17 @@ public class generaXml {
                 TOT_6 += moneda + "";
                 TOT_7 += valorDto1 + "";
                 TOT_8 += moneda + "";
+                TOT_9 += totalDcto;
+                
+                if(totalDcto != 0){
+                DSC_1 += "FALSE";
+                DSC_2 += String.valueOf(tarifaDctoFactura);
+                DSC_3 += String.valueOf(totalDcto);
+                DSC_4 += "COP";
+                DSC_5 += "09";
+                DSC_7 += importeBruto;
+                DSC_8 += "COP";                
+                        }
 
                 totalLineas += TOT_1 + TOT_2 + TOT_3 + TOT_4 + TOT_5 + TOT_6 + etiquetaFinalTOT;
 
@@ -1034,9 +1123,24 @@ public class generaXml {
                 writer.println("\t"+TOT_4+"</TOT_4>");
                 writer.println("\t"+TOT_5+"</TOT_5>");
                 writer.println("\t"+TOT_6+"</TOT_6>");
+                writer.println("\t"+TOT_9+"</TOT_9>");
                 //writer.println(TOT_7);
                 //writer.println(TOT_8);
                 writer.println("\t"+etiquetaFinalTOT);
+                 ///////////////////////////////////////////////
+                //////DSC
+                //////////////////////////////////////////////               
+                if(totalDcto != 0){
+                    writer.println("\t"+etiquetaInicialDSC);
+                writer.println("\t"+DSC_1+"</DSC_1>");
+                writer.println("\t"+DSC_2+"</DSC_2>");
+                writer.println("\t"+DSC_3+"</DSC_3>");
+                writer.println("\t"+DSC_4+"</DSC_4>");
+                writer.println("\t"+DSC_5+"</DSC_5>");
+                writer.println("\t"+DSC_7+"</DSC_7>");
+                writer.println("\t"+DSC_8+"</DSC_8>");       
+                writer.println("\t"+etiquetaFinalDSC);
+                        }
                 ///////////////////////////////////////////////
                 //////DFR
                 //////////////////////////////////////////////
