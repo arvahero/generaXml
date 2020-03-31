@@ -944,23 +944,48 @@ public class generaXml {
                 String resolucionFacturacion = "";
                 String etiquetaInicialDRF = "<DRF>";
                 String etiquetaFinalDRF = "</DRF>";
+                
+                String consultaResolucion = "select NAutorizacion, CONVERT(date,FechaDesde) as FechaDesde ,CONVERT(date,FechaHasta) as FechaHasta, ContadorDesde, ContadorHasta from tbLatMaestroContador where idContador = "+"'"+ prefijo+"'";
+                ResultSet resultadoResolucion= fachada.ejecutarConsulta(consultaResolucion);
+                
+                String resFacturacion = "";
+                String fechaDesde = "";
+                String fechaHasta = "";
+                String consecutivoDesde = "";
+                String consecutivoHasta = "";
+                
+                
+                while(resultadoResolucion.next()){
+                    
+                    resFacturacion = resultadoResolucion.getNString("NAutorizacion");
+                    fechaDesde = resultadoResolucion.getString("FechaDesde");
+                    fechaHasta = resultadoResolucion.getString("FechaHasta");
+                    consecutivoDesde = resultadoResolucion.getString("ContadorDesde");
+                    consecutivoHasta = resultadoResolucion.getString("ContadorHasta");
+                }
 
-                String DRF_1 = "<DRF_1>9000000035441634";
-                String DRF_2 = "<DRF_2>2018-12-12";
-                String DRF_3 = "<DRF_3>";
+                String DRF_1 = "\t\t<DRF_1>"+resFacturacion+"</DRF_1>";
+                String DRF_2 = "\t\t<DRF_2>"+fechaDesde+"</DRF_2>";
+                String DRF_3 = "\t\t<DRF_3>"+fechaHasta+"</DRF_3>";
                 //String DRF_4 = "DRF_4>" + prefijo + "";
-                String DRF_4 = "<DRF_4>PRUE";
-                String DRF_5 = "<DRF_5>980000000";
-                String DRF_6 = "<DRF_6>985000000";
-
-                resolucionFacturacion += etiquetaInicialDRF;
-                resolucionFacturacion += DRF_4;
-                resolucionFacturacion += etiquetaFinalDRF;
+                String DRF_4 = "\t\t<DRF_4>"+prefijo+"</DRF_4>";
+                String DRF_5 = "\t\t<DRF_5>"+consecutivoDesde+"</DRF_5>";
+                String DRF_6 = "\t\t<DRF_6>"+consecutivoHasta+"</DRF_6>";
 
                 ////NOTAS QUE IRAN EN LA FACTURA TIPO RETENEDOR - REGIMEN - IVA ETC
                 String etiquetaInicialNOT = "<NOT>";
                 String etiquetaFinalNOT = "</NOT>";
                 String notaFactura = "<NOT_1>NO SOMOS GRANDES CONTRIBUYENTES - REGIMEN COMUN - CIIU 4631";
+                
+                
+                ///MEDIOS DE PAGO
+                String etiquetaInicialMEP = "<MEP>";
+                String MEP_1 = "<MEP_1>";
+                String MEP_2 = "<MEP_2>";
+                String MEP_3 = "<MEP_3>";
+                String etiquetaFinalMEP = "</MEP>";
+                
+
 
                 ////INFORMACION PARA CARVAJAL
                 String etiquetaInicialCTS = "<CTS>";
@@ -1146,6 +1171,7 @@ public class generaXml {
                 //////////////////////////////////////////////
                 writer.println("\t"+etiquetaInicialDRF);
                 writer.println("\t"+DRF_1+"</DRF_1>");
+                writer.println("\t"+DRF_2+"</DRF_2>");
                 writer.println("\t"+DRF_2+"</DRF_2>");
                 writer.println("\t"+DRF_4+"</DRF_4>");
                 writer.println("\t"+DRF_5+"</DRF_5>");
