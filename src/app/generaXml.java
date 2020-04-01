@@ -40,7 +40,7 @@ public class generaXml {
     String correo = "";
     String tipoDocumento = "";
     String cufe = "";
-    String zonaHoraria= "-5:00";
+    String zonaHoraria= "-05:00";
     
     String sSistemaOperativo = System.getProperty("os.name");
 
@@ -97,9 +97,12 @@ public class generaXml {
     String horaEmisionFactura = "";
     String moneda = "";
     String fechaVencimientoFactura = "";
+    String medioPago = "";
+    String formaPago = "";
     String prefijo = "";
     double importeBruto = 0.00;
     double baseImponible = 0.00;
+    double valorIva = 0.00;
     double totalFactura = 0.00;
 
     //////DATOS DEL EMISOR
@@ -263,6 +266,10 @@ public class generaXml {
     String DFA_2;
     String DFA_3;
     String DFA_4;
+    String DFA_5;
+    String DFA_6;
+    String DFA_7;
+    String DFA_8;    
     String etiquetaFinalDFA = "</DFA>";
     
     String etiquetaInicialICR = "<ICR>";
@@ -318,6 +325,14 @@ public class generaXml {
     String ITE_24 = "";
     String ITE_25 = "";
     String ITE_26 = "";
+    String ITE_27 = "";
+    String ITE_28 = "";
+    
+    
+    String etiquetaInicialIAE = "<IAE>";
+    String IAE_1 = "";
+    String IAE_2 = "";
+    String etiquetaFinalIAE = "</IAE>";
 
 
     String totalLineas = "";
@@ -483,6 +498,18 @@ public class generaXml {
                 horaEmisionFactura = (datosDocumento.getString("Hora")).trim();
                 moneda = datosDocumento.getString("IDMoneda");
                 fechaVencimientoFactura = datosDocumento.getString("FechaV");
+                
+                if(datosDocumento.getString("IDFormaPago").equals("00")){
+                medioPago = "ZZZ";
+                }else{
+                    medioPago = "10";
+                }
+                
+                if(datosDocumento.getString("IDCondicionPago").equals("00")){
+                    formaPago = "1";
+                }else{
+                    formaPago = "2";
+                }
 
                 //Datos Emisor ADQ
                 tipoPersonaADQ = "";
@@ -511,6 +538,7 @@ public class generaXml {
 
                 //Totales
                 baseImponible = datosDocumento.getDouble("baseImponible");
+                valorIva = datosDocumento.getDouble("ImpIva");
                 totalFactura = datosDocumento.getDouble("impTotal");
                 totalDctoFactura = datosDocumento.getDouble("impDtoFactura");
                 tarifaDctoFactura = datosDocumento.getDouble("DtoFactura")/100;
@@ -539,7 +567,6 @@ public class generaXml {
                 ENC_17 = "<ENC_17>";
                 ENC_18 = "<ENC_18>";
                 ENC_20 = "<ENC_20>";
-                ENC_21 = "<ENC_21>";
                 ENC_21 = "<ENC_21>";
                 
 
@@ -600,6 +627,11 @@ public class generaXml {
                 DFE_1 = "<DFE_1>";
                 DFE_2 = "<DFE_2>";
                 DFE_3 = "<DFE_3>";
+                DFE_4 = "<DFE_4>";
+                DFE_5 = "<DFE_5>";
+                DFE_6 = "<DFE_6>";
+                DFE_7 = "<DFE_7>";
+                DFE_8 = "<DFE_8>";
                     
                 camaraDeComercio = "";
                 etiquetaInicialICC = "<ICC>";
@@ -656,13 +688,17 @@ public class generaXml {
                 DFA_2 = "<DFA_2>";
                 DFA_3 = "<DFA_3>";
                 DFA_4 = "<DFA_4>";
+                DFA_5 = "<DFA_5>";
+                DFA_6 = "<DFA_6>";
+                DFA_7 = "<DFA_7>";
+                DFA_8 = "<DFA_8>";
                 
                 ICR_1 = "<ICR_1>";
                 
                 GTA_1 = "<GTA_1>";
                 GTA_2 = "<GTA_2>";
                     
-                ENC_1 += "INVOICE";
+                ENC_1 += "INVOIC";
                 ENC_2 += cif + "";
                 ENC_3 += cifCliente + "";
                 ENC_6 += numeroFactura + "";
@@ -704,7 +740,7 @@ public class generaXml {
                 }
                 EMI_5 += "";
                 EMI_6 += descEmpresa + "";
-                EMI_7 += "";
+                EMI_7 += descEmpresa;
                 EMI_8 += "";
                 EMI_9 += "";
                 EMI_10 += direccion + "";
@@ -733,6 +769,11 @@ public class generaXml {
                 DFE_1 +=codPostal+"";
                 DFE_2 +=provincia+"";
                 DFE_3 +=codISOPais+"";
+                DFE_4 +=codPostal+"";
+                DFE_5 += descPais;
+                DFE_6 += departamento;
+                DFE_7 += poblacion;
+                DFE_8 += direccion;
                 
                 if(obligacionesEmpresa.contains("O-48")){
                     GTE_1 ="<GTE_1>01";
@@ -800,11 +841,15 @@ public class generaXml {
                 
                 
                 DFA_1 +="CO";
-                DFA_2 += codPostal.substring(0,2) + "";
-                DFA_3 += codPostal + "";
-                DFA_4 += codPostal + "";
+                DFA_2 += codPostalADQ.substring(0,2) + "";
+                DFA_3 += codPostalADQ + "";
+                DFA_4 += codPostalADQ + "";
+                DFA_5 += "Colombia";
+                DFA_6 += provinciaADQ;
+                DFA_7 += poblacionADQ;
+                DFA_8 += direccionADQ;
                 
-                ICR_1 = "<ICR>112345";
+                ICR_1 += "112345";
                 
                 if(obligacionesADQ.contains("O-48")){
                     GTA_1 ="<GTA_1>01";
@@ -856,7 +901,6 @@ public class generaXml {
                 regalo = 0;
 
                 ITE_1 = "";
-                ITE_2 = "";
                 ITE_3 = "";
                 ITE_4 = "";
                 ITE_5 = "";
@@ -917,18 +961,19 @@ public class generaXml {
                 TOT_4 += moneda + "";
                 TOT_5 += formato.format(totalFactura) + "";
                 TOT_6 += moneda + "";
-                TOT_7 += valorDto1 + "";
+                TOT_7 += valorDto1 + valorIva;
                 TOT_8 += moneda + "";
                 TOT_9 += totalDcto;
                 
                 if(totalDcto != 0){
-                DSC_1 += "FALSE";
+                DSC_1 += "false";
                 DSC_2 += String.valueOf(tarifaDctoFactura);
                 DSC_3 += String.valueOf(totalDcto);
                 DSC_4 += "COP";
-                DSC_5 += "09";
+                DSC_5 += "01";
                 DSC_7 += importeBruto;
-                DSC_8 += "COP";                
+                DSC_8 += "COP"; 
+                DSC_10 += "1";
                         }
 
                 totalLineas += TOT_1 + TOT_2 + TOT_3 + TOT_4 + TOT_5 + TOT_6 + etiquetaFinalTOT;
@@ -964,13 +1009,13 @@ public class generaXml {
                     consecutivoHasta = resultadoResolucion.getString("ContadorHasta");
                 }
 
-                String DRF_1 = "\t\t<DRF_1>"+resFacturacion+"</DRF_1>";
-                String DRF_2 = "\t\t<DRF_2>"+fechaDesde+"</DRF_2>";
-                String DRF_3 = "\t\t<DRF_3>"+fechaHasta+"</DRF_3>";
+                String DRF_1 = "\t\t<DRF_1>"+resFacturacion;
+                String DRF_2 = "\t\t<DRF_2>"+fechaDesde;
+                String DRF_3 = "\t\t<DRF_3>"+fechaHasta;
                 //String DRF_4 = "DRF_4>" + prefijo + "";
-                String DRF_4 = "\t\t<DRF_4>"+prefijo+"</DRF_4>";
-                String DRF_5 = "\t\t<DRF_5>"+consecutivoDesde+"</DRF_5>";
-                String DRF_6 = "\t\t<DRF_6>"+consecutivoHasta+"</DRF_6>";
+                String DRF_4 = "\t\t<DRF_4>"+prefijo;
+                String DRF_5 = "\t\t<DRF_5>"+consecutivoDesde;
+                String DRF_6 = "\t\t<DRF_6>"+consecutivoHasta;
 
                 ////NOTAS QUE IRAN EN LA FACTURA TIPO RETENEDOR - REGIMEN - IVA ETC
                 String etiquetaInicialNOT = "<NOT>";
@@ -984,6 +1029,11 @@ public class generaXml {
                 String MEP_2 = "<MEP_2>";
                 String MEP_3 = "<MEP_3>";
                 String etiquetaFinalMEP = "</MEP>";
+                
+                
+                MEP_1 += medioPago+"</MEP_1>";
+                MEP_2 += formaPago+"</MEP_2>";
+                MEP_3 += fechaVencimientoFactura+"</MEP_3>";               
                 
 
 
@@ -1023,6 +1073,7 @@ public class generaXml {
                 writer.println("\t"+EMI_3+"</EMI_3>");
                 writer.println("\t"+EMI_4+"</EMI_4>");
                 writer.println("\t"+EMI_6+"</EMI_6>");
+                writer.println("\t"+EMI_7+"</EMI_7>");
                 writer.println("\t"+EMI_10+"</EMI_10>");
                 writer.println("\t"+EMI_11+"</EMI_11>");
                 //writer.println(EMI_12);
@@ -1049,7 +1100,11 @@ public class generaXml {
                 writer.println("\t"+"\t"+DFE_1+"</DFE_1>");
                 writer.println("\t"+"\t"+DFE_2+"</DFE_2>");
                 writer.println("\t"+"\t"+DFE_3+"</DFE_3>");
-                
+                writer.println("\t"+"\t"+DFE_4+"</DFE_4>");
+                writer.println("\t"+"\t"+DFE_5+"</DFE_5>");
+                writer.println("\t"+"\t"+DFE_6+"</DFE_6>");
+                writer.println("\t"+"\t"+DFE_7+"</DFE_7>");
+                writer.println("\t"+"\t"+DFE_8+"</DFE_8>");
                 writer.println("\t"+"\t"+etiquetaFinalDFE);
                 /////////////////////////////////
                 /////////////////////////////////
@@ -1122,7 +1177,11 @@ public class generaXml {
                 writer.println("\t"+"\t"+DFA_1+"</DFA_1>");
                 writer.println("\t"+"\t"+DFA_2+"</DFA_2>");
                 writer.println("\t"+"\t"+DFA_3+"</DFA_3>");
-                writer.println("\t"+"\t"+DFA_4+"</DFA_4>");                   
+                writer.println("\t"+"\t"+DFA_4+"</DFA_4>");      
+                writer.println("\t"+"\t"+DFA_5+"</DFA_5>");
+                writer.println("\t"+"\t"+DFA_6+"</DFA_6>");
+                writer.println("\t"+"\t"+DFA_7+"</DFA_7>");
+                writer.println("\t"+"\t"+DFA_8+"</DFA_8>");
                 writer.println("\t"+"\t"+etiquetaFinalDFA);
                 ////////////////////////////////////
                 //////ICR
@@ -1148,9 +1207,9 @@ public class generaXml {
                 writer.println("\t"+TOT_4+"</TOT_4>");
                 writer.println("\t"+TOT_5+"</TOT_5>");
                 writer.println("\t"+TOT_6+"</TOT_6>");
+                writer.println("\t"+TOT_7+"</TOT_7>");
+                writer.println("\t"+TOT_8+"</TOT_8>");
                 writer.println("\t"+TOT_9+"</TOT_9>");
-                //writer.println(TOT_7);
-                //writer.println(TOT_8);
                 writer.println("\t"+etiquetaFinalTOT);
                  ///////////////////////////////////////////////
                 //////DSC
@@ -1163,7 +1222,8 @@ public class generaXml {
                 writer.println("\t"+DSC_4+"</DSC_4>");
                 writer.println("\t"+DSC_5+"</DSC_5>");
                 writer.println("\t"+DSC_7+"</DSC_7>");
-                writer.println("\t"+DSC_8+"</DSC_8>");       
+                writer.println("\t"+DSC_8+"</DSC_8>");     
+                writer.println("\t"+DSC_10+"</DSC_10>");
                 writer.println("\t"+etiquetaFinalDSC);
                         }
                 ///////////////////////////////////////////////
@@ -1172,7 +1232,7 @@ public class generaXml {
                 writer.println("\t"+etiquetaInicialDRF);
                 writer.println("\t"+DRF_1+"</DRF_1>");
                 writer.println("\t"+DRF_2+"</DRF_2>");
-                writer.println("\t"+DRF_2+"</DRF_2>");
+                writer.println("\t"+DRF_3+"</DRF_3>");
                 writer.println("\t"+DRF_4+"</DRF_4>");
                 writer.println("\t"+DRF_5+"</DRF_5>");
                 writer.println("\t"+DRF_6+"</DRF_6>");
@@ -1182,6 +1242,15 @@ public class generaXml {
                 writer.println("\t"+etiquetaInicialNOT);
                 writer.println("\t"+notaFactura+"</NOT_1>");
                 writer.println("\t"+etiquetaFinalNOT);
+                //////////////////////////////////////////
+                ///////MEP
+                writer.println("\t"+etiquetaInicialMEP);
+                writer.println("\t"+MEP_1);
+                writer.println("\t"+MEP_2);
+                writer.println("\t"+MEP_3);
+                writer.println("\t"+etiquetaFinalMEP);
+                ///////////////////////////////////////////////                
+                
                 ///////////////////////////////////////////////
                 ///////CTS
                 ///////////////////////////////////////////////
@@ -1200,6 +1269,10 @@ public class generaXml {
                     descArticulo = resultadoLineas.getString("DescArticulo");
                     factor = resultadoLineas.getDouble("Factor");
                     dto1 = resultadoLineas.getDouble("Dto1");
+                    dto2 = resultadoLineas.getDouble("Dto1");
+                    dto3 = resultadoLineas.getDouble("Dto1");
+                    dto = resultadoLineas.getDouble("Dto1");
+                    
                     idUdMedida = resultadoLineas.getString("IDUdMedida");
                     idArticulo = resultadoLineas.getString("IDArticulo");
                     subtotal = subtotal + (cantidad * precio);
@@ -1212,13 +1285,9 @@ public class generaXml {
                     cantidadLineas++;
 
                     ITE_1 = "<ITE_1>" + cantidadLineas + "";
-                    if (regalo == 0) {
-                        ITE_2 = "<ITE_2>FALSE";
-                    } else {
-                        ITE_2 = "<ITE_2>TRUE";
-                    }
                     ITE_3 = "<ITE_3>" + cantidad + "";
-                    ITE_4 = "<ITE_4>" + idUdMedida + "";
+                    //ITE_4 = "<ITE_4>" + idUdMedida + "";
+                    ITE_4 = "<ITE_4>NAR";
                     ITE_5 = "<ITE_5>" + (cantidad * precio) + "";
                     ITE_6 = "<ITE_6>" + moneda + "";
                     ITE_7 = "<ITE_7>" + precio + "";
@@ -1227,7 +1296,9 @@ public class generaXml {
                     ITE_11 = "<ITE_11>" + descArticulo + "";
                     ITE_19 = "<ITE_19>" + importe + "";
                     ITE_20 = "<ITE_20>" + moneda + "";
-
+                    ITE_27 = "<ITE_27>" + cantidad + "";
+                    //ITE_28 = "<ITE_28>" + idUdMedida + "";
+                    ITE_28 = "<ITE_28>NAR";
                     itemsFactura += etiquetaInicialITE + ITE_1 + ITE_2 + ITE_3 + ITE_4 + ITE_5 + ITE_6 + ITE_7 + ITE_8 + ITE_9 + ITE_11 + ITE_19 + ITE_20;
 
                     if (lote != null) {
@@ -1238,7 +1309,6 @@ public class generaXml {
                     itemsFactura += etiquetaFinalITE;
                                     writer.println(etiquetaInicialITE);
                 writer.println("\t"+ITE_1+"</ITE_1>");
-                writer.println("\t"+ITE_2+"</ITE_2>");
                 writer.println("\t"+ITE_3+"</ITE_3>");
                 writer.println("\t"+ITE_4+"</ITE_4>");
                 writer.println("\t"+ITE_5+"</ITE_5>");
@@ -1249,6 +1319,8 @@ public class generaXml {
                 writer.println("\t"+ITE_11+"</ITE_11>");
                 writer.println("\t"+ITE_19+"</ITE_19>");
                 writer.println("\t"+ITE_20+"</ITE_20>");
+                writer.println("\t"+ITE_27+"</ITE_27>");
+                writer.println("\t"+ITE_28+"</ITE_28>");
                 //////////////////////////////////////
                 ///////LOTE
                 //////////////////////////////////////
@@ -1259,15 +1331,28 @@ public class generaXml {
                     writer.println(etiquetaFinalLote);
                 }
                 ////////////////////////////////////////
-                ////////
-                writer.println("\t"+etiquetaFinalITE);
+                ////////IAE CODIGO DE ARTICULO SEGUN ESTANDAR
+                IAE_1 = idArticulo;
+                IAE_2 = "999";
+                
+                writer.println("\t"+etiquetaInicialIAE);
+                writer.println("\t\t"+"<IAE_1>"+IAE_1+"</IAE_1>");
+                writer.println("\t\t"+"<IAE_2>"+IAE_2+"</IAE_2>");
+                writer.println("\t"+etiquetaFinalIAE);
+                
+                
+                
+                
+                writer.println(etiquetaFinalITE);
 
                 }
+                
                 writer.println(etiquetaFinDoc);
 
-                writer.close();
+                writer.close();                
 
             }
+            
 
         } catch (Exception e) {
             System.out.println("Error Factura: " + e.toString());
