@@ -80,6 +80,7 @@ public class generaXml {
     String obligacionesEmpresa = "";
     String descEmpresa = "";
     String CIIU= "";
+    String registroMercantil = "";
     String web = "";
     String direccion = "";
     String poblacion = "";
@@ -104,7 +105,8 @@ public class generaXml {
     double baseImponible = 0.00;
     double valorIva = 0.00;
     double totalFactura = 0.00;
-
+    double valorRetencion = 0.00;
+    double valorImpuesto = 0.0;
     //////DATOS DEL EMISOR
     String emisor = "";
     String etiquetaInicialEMI = "<EMI>";
@@ -165,7 +167,7 @@ public class generaXml {
     String camaraDeComercio = "";
     String etiquetaInicialICC = "<ICC>";
     String etiquetaFinalICC = "</ICC>";
-    String ICC_1 = "<ICC_1>244367-16</ICC_1>";
+    String ICC_1 = "<ICC_1>";
     //String ICC_2 = "ICC_2>";
     //String ICC_3 = "ICC_3>Yumbo";
     //String ICC_4 = "ICC_4>";
@@ -206,8 +208,13 @@ public class generaXml {
     /////////////////////////////////////////////
     //////INFORMACION DESCUENTOS Y CARGOS
     String etiquetaInicialIDE = "<IDE>";
-    String IDE_1 = "<IDE_1>";//IDENTIFICADOR TRIBUTO 01-IVA
-    String IDE_2 = "<IDE_2>";//NOMBRE TRIBUTO
+    String IDE_1 = "<IDE_1>";//IDENTIFICADOR DESCUENTO=false CARGOS=true
+    String IDE_2 = "<IDE_2>";//VALOR DESCUENTO Y CARGO
+    String IDE_3 = "<IDE_3>";//MONEDA
+    String IDE_6 = "<IDE_6>";//PORCENTAJE
+    String IDE_7 = "<IDE_7>";//BASE
+    String IDE_8 = "<IDE_8>";//MONEDA BASE
+    String IDE_10 = "<IDE_10>";//CONSECUTIVO DESCUENTO
     String etiquetaFinalIDE = "</IDE>";
     
 
@@ -328,6 +335,14 @@ public class generaXml {
     String ITE_27 = "";
     String ITE_28 = "";
     
+    String IIM_1 = "";
+    String IIM_2 = "";
+    String IIM_3 = "";
+    String IIM_4 = "";
+    String IIM_5 = "";
+    String IIM_6 = "";
+    
+    
     
     String etiquetaInicialIAE = "<IAE>";
     String IAE_1 = "";
@@ -416,13 +431,13 @@ public class generaXml {
         String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
                 + "C.Provincia as DptoC,C.IDPais as PaisC,FVCCG.CodPostal, FVCCG.NFactura,SUBSTRING(FVCCG.NFactura,LEN(FVCCG.IDContador)+1,LEN(FVCCG.NFactura)-LEN(FVCCG.IDContador)) "
                 + "AS Folio,CONVERT(CHAR(10),FVCCG.FechaFactura,23) as Fecha,CONVERT(CHAR(10), FVCCG.FechaFactura,108) as Hora,FVCCG.FechaFactura,CONVERT(CHAR(10),FVCCG.FechaVencimiento,23) as FechaV,FVCCG.FechaVencimiento,FVCCG.IDContador,FVCCG.IDMoneda,"
-                + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.ImpDtoFactura,FVCCG.DtoFactura,FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
-                + "JOIN (select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DtoFactura,FVC.ImpDtoFactura,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
+                + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.ImpDtoFactura,FVCCG.DtoFactura,FVCCG.ImpRetencion, FVCCG.ImpImpuestos , FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
+                + "JOIN (select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DtoFactura,FVC.ImpDtoFactura,FVC.ImpRetencion, FVC.ImpImpuestos ,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
                 + "CG.IDPais,FVC.IDFactura, FVC.TipoFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
                 + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.FechaFactura >=CONVERT(date,'2020-02-29') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 
         ResultSet resultadoFacturas = fachada.ejecutarConsulta(consultaFacturas);
-        ResultSet datosEmpresa = fachada.ejecutarConsulta("select DescEmpresa,Cif,Direccion,web,CodPostal, Poblacion, provincia as Departamento,substring(codpostal,1,2) as Provincia,tbDatosEmpresa.IDPais, tbMaestroPais.CodigoISO, DescPais, IDCNAE AS CIIU, DatosRegistrales as Obligaciones,IDCAE as TipoDoc from tbDatosEmpresa inner join tbMaestroPais on tbDatosEmpresa.IDPais = tbMaestroPais.IDPais");
+        ResultSet datosEmpresa = fachada.ejecutarConsulta("select DescEmpresa,Cif,Direccion,web,CodPostal, Poblacion, provincia as Departamento,substring(codpostal,1,2) as Provincia,tbDatosEmpresa.IDPais, tbMaestroPais.CodigoISO, DescPais, IDCNAE AS CIIU, DatosRegistrales as Obligaciones, RegistroMercantil, IDCAE as TipoDoc from tbDatosEmpresa inner join tbMaestroPais on tbDatosEmpresa.IDPais = tbMaestroPais.IDPais");
 
         String consultaNotas = "select C.CifCliente,C.DescCliente,C.RazonSocial,C.IDTipoCliente,C.TipoDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
                 + "C.Provincia as DptoC,C.IDPais as PaisC,FVCCG.NFactura,SUBSTRING(FVCCG.NFactura,LEN(FVCCG.IDContador)+1,LEN(FVCCG.NFactura)-LEN(FVCCG.IDContador)) "
@@ -467,6 +482,7 @@ public class generaXml {
                 tipoDocEmpresa = datosEmpresa.getString("TipoDoc");
                 obligacionesEmpresa = datosEmpresa.getString("obligaciones");
                 CIIU = datosEmpresa.getString("CIIU");
+                registroMercantil = datosEmpresa.getString("RegistroMercantil").substring(0, datosEmpresa.getString("RegistroMercantil").indexOf("-"));
                 
 
             }
@@ -540,6 +556,8 @@ public class generaXml {
                 baseImponible = datosDocumento.getDouble("baseImponible");
                 valorIva = datosDocumento.getDouble("ImpIva");
                 totalFactura = datosDocumento.getDouble("impTotal");
+                valorRetencion = datosDocumento.getDouble("impRetencion");
+                valorImpuesto = datosDocumento.getDouble("impImpuestos");
                 totalDctoFactura = datosDocumento.getDouble("impDtoFactura");
                 tarifaDctoFactura = datosDocumento.getDouble("DtoFactura")/100;
 
@@ -637,7 +655,7 @@ public class generaXml {
                 etiquetaInicialICC = "<ICC>";
                 etiquetaFinalICC = "</ICC>";
 
-                ICC_1 = "<ICC_1>970015-16";
+                ICC_1 = "<ICC_1>"+registroMercantil;
                 //ICC_2 = "ICC_2>";
                 //ICC_3 = "ICC_3>Yumbo";
                 //ICC_4 = "ICC_4>";
@@ -705,7 +723,7 @@ public class generaXml {
                 //ENC_6 += "PRUE980000100";
                 ENC_7 += fechaEmisionFactura + "";
                 ENC_8 += horaEmisionFactura + zonaHoraria + "";
-                ENC_9 += "1";
+                ENC_9 += "01";
                 ENC_10 += moneda + "";
                 ENC_11 += "";
                 ENC_12 += "";
@@ -873,7 +891,7 @@ public class generaXml {
                 contactoADQ += etiquetaFinalCDA;
 
                 String consultaLinea = "";
-                consultaLinea = "select Cantidad,FL.Lote as LoteItem,Regalo,Importe,Precio,DescArticulo,Dto1,IDUdMedida,IDArticulo,IVA.Factor from tbFacturaVentaLinea as FVL "
+                consultaLinea = "select IDLineaFactura, Cantidad,FL.Lote as LoteItem,Regalo,Importe,Precio,DescArticulo,Dto,Dto1,Dto2,Dto3,IDUdMedida,IDArticulo,IVA.Factor from tbFacturaVentaLinea as FVL "
                         + "join tbMaestroTipoIva as IVA on FVL.IDTipoIVA = IVA.IDTipoIva"
                         + " left join tbAlbaranVentaLote as FL on FL.idLineaAlbaran = FVL.idLineaAlbaran where IDFactura=" + datosDocumento.getString("IDFactura");
 
@@ -883,15 +901,21 @@ public class generaXml {
                 double importe = 0.00;
                 double precio = 0.00;
                 String descArticulo = "";
-                double factor = 0.00;
+                double iva = 0.00;
                 double dto1 = 0.00;
+                double dto2 = 0.00;
+                double dto3 = 0.00;
+                double dto = 0.00;
+                double[]dtos = new double[4];
                 String idUdMedida = "";
                 String idArticulo = "";
                 double subtotal = 0.00;
                 double valorDto1 = 0.00;
                 double totalDcto = 0.00;
                 double divisor = 100.00;
-                double mntImpuesto = 0.00;
+                double mntIva = 0.00;
+                double mntImpuestos = 0.00;
+                String idLineaFactura = "";
 
                 ////INFORMACION SOBRE LOS ITEM DE LA FACTURA
                 itemsFactura = "";
@@ -944,37 +968,82 @@ public class generaXml {
                 TOT_12 = "<TOT_12>";
                 TOT_13 = "<TOT_13>";
                 TOT_14 = "<TOT_14>";
+                
+                DSC_1 = "<DSC_1>";
+                DSC_2 = "<DSC_2>";
+                DSC_3 = "<DSC_3>";
+                DSC_4 = "<DSC_4>";
+                DSC_5 = "<DSC_5>";
+                DSC_6 = "<DSC_6>";
+                DSC_7 = "<DSC_7>";
+                DSC_8 = "<DSC_8>";
+                DSC_9 = "<DSC_9>";
+                DSC_10 = "<DSC_10>";
 
-                DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-                simbolos.setDecimalSeparator('.');
-                DecimalFormat formato = new DecimalFormat("#.00", simbolos);
+                
+                
+                
+                
+                String consultaDescuento = "";
+                consultaDescuento = "select Cantidad,FL.Lote as LoteItem,Regalo,Importe,Precio,DescArticulo,Dto,Dto1,Dto2,Dto3,IDUdMedida,IDArticulo,IVA.Factor from tbFacturaVentaLinea as FVL "
+                        + "join tbMaestroTipoIva as IVA on FVL.IDTipoIVA = IVA.IDTipoIva"
+                        + " left join tbAlbaranVentaLote as FL on FL.idLineaAlbaran = FVL.idLineaAlbaran where IDFactura=" + datosDocumento.getString("IDFactura");
+
+                ResultSet resultadoDescuento = fachada.ejecutarConsulta(consultaDescuento);
+                
+                while (resultadoDescuento.next()) {
+                    cantidad = resultadoDescuento.getDouble("Cantidad");
+                    importe = resultadoDescuento.getDouble("Importe");
+                    precio = resultadoDescuento.getDouble("Precio");
+                    dto1 = resultadoDescuento.getDouble("Dto1")/divisor;
+                    dto2 = resultadoDescuento.getDouble("Dto2")/divisor;
+                    dto3 = resultadoDescuento.getDouble("Dto3")/divisor;
+                    dto = resultadoDescuento.getDouble("Dto")/divisor;
+                    
+                    dtos[0]=dto;
+                    dtos[1]=dto1;                    
+                    dtos[2]=dto2;
+                    dtos[3]=dto3;
+                    
+                    double descuentos[][] = new double[4][0];
+
+                    descuentos = calculaDescuento(cantidad * precio,dtos);
+                    
+                    for (double[] descuento : descuentos) {
+                        totalDcto += descuento[0];
+                    }
+
+                    
+                }
                 
 
                     
-                    totalDcto= tarifaDctoFactura * importeBruto;
+                    
                 
 
                 importeBruto = baseImponible + totalDcto;
-                TOT_1 += formato.format(importeBruto) + "";
+                TOT_1 += formateador(importeBruto) + "";
                 TOT_2 += moneda + "";
-                TOT_3 += formato.format(baseImponible) + "";
+                TOT_3 += formateador(baseImponible) + "";
                 TOT_4 += moneda + "";
-                TOT_5 += formato.format(totalFactura) + "";
+                TOT_5 += formateador(totalFactura - valorRetencion) + "";
                 TOT_6 += moneda + "";
-                TOT_7 += valorDto1 + valorIva;
+                TOT_7 += formateador(importeBruto + valorIva+ valorImpuesto);
                 TOT_8 += moneda + "";
-                TOT_9 += totalDcto;
+                TOT_9 += formateador(totalDcto);
+                TOT_10 += moneda + "";
                 
-                if(totalDcto != 0){
+  
                 DSC_1 += "false";
-                DSC_2 += String.valueOf(tarifaDctoFactura);
-                DSC_3 += String.valueOf(totalDcto);
+                DSC_2 += formateador(totalDcto/importeBruto);
+                DSC_3 += formateador(totalDcto);
                 DSC_4 += "COP";
-                DSC_5 += "01";
-                DSC_7 += importeBruto;
+                DSC_5 += "00";
+                DSC_7 += formateador(importeBruto);
                 DSC_8 += "COP"; 
                 DSC_10 += "1";
-                        }
+
+
 
                 totalLineas += TOT_1 + TOT_2 + TOT_3 + TOT_4 + TOT_5 + TOT_6 + etiquetaFinalTOT;
 
@@ -1049,206 +1118,209 @@ public class generaXml {
                 ///////ENCABEZADO
                 /////////////////////////////////
                 writer.println("\t"+etiquetaInicialENC);
-                writer.println("\t"+ENC_1+"</ENC_1>");
-                writer.println("\t"+ENC_2+"</ENC_2>");
-                writer.println("\t"+ENC_3+"</ENC_3>");
-                writer.println("\t"+ENC_4+"</ENC_4>");
-                writer.println("\t"+ENC_5+"</ENC_5>");
-                writer.println("\t"+ENC_6+"</ENC_6>");
-                writer.println("\t"+ENC_7+"</ENC_7>");
-                writer.println("\t"+ENC_8+"</ENC_8>");
-                writer.println("\t"+ENC_9+"</ENC_9>");
-                writer.println("\t"+ENC_10+"</ENC_10>");
-                writer.println("\t"+ENC_15+"</ENC_15>");
-                writer.println("\t"+ENC_16+"</ENC_16>");
-                writer.println("\t"+ENC_20+"</ENC_20>");
-                writer.println("\t"+ENC_21+"</ENC_21>");
+                writer.println("\t\t"+ENC_1+"</ENC_1>");
+                writer.println("\t\t"+ENC_2+"</ENC_2>");
+                writer.println("\t\t"+ENC_3+"</ENC_3>");
+                writer.println("\t\t"+ENC_4+"</ENC_4>");
+                writer.println("\t\t"+ENC_5+"</ENC_5>");
+                writer.println("\t\t"+ENC_6+"</ENC_6>");
+                writer.println("\t\t"+ENC_7+"</ENC_7>");
+                writer.println("\t\t"+ENC_8+"</ENC_8>");
+                writer.println("\t\t"+ENC_9+"</ENC_9>");
+                writer.println("\t\t"+ENC_10+"</ENC_10>");
+                writer.println("\t\t"+ENC_15+"</ENC_15>");
+                writer.println("\t\t"+ENC_16+"</ENC_16>");
+                writer.println("\t\t"+ENC_20+"</ENC_20>");
+                writer.println("\t\t"+ENC_21+"</ENC_21>");
                 writer.println("\t"+etiquetaFinalENC);
                 //////////////////////////////////
                 ///////EMISOR
                 /////////////////////////////////
                 writer.println("\t"+etiquetaInicialEMI);
-                writer.println("\t"+EMI_1+"</EMI_1>");
-                writer.println("\t"+EMI_2+"</EMI_2>");
-                writer.println("\t"+EMI_3+"</EMI_3>");
-                writer.println("\t"+EMI_4+"</EMI_4>");
-                writer.println("\t"+EMI_6+"</EMI_6>");
-                writer.println("\t"+EMI_7+"</EMI_7>");
-                writer.println("\t"+EMI_10+"</EMI_10>");
-                writer.println("\t"+EMI_11+"</EMI_11>");
+                writer.println("\t\t"+EMI_1+"</EMI_1>");
+                writer.println("\t\t"+EMI_2+"</EMI_2>");
+                writer.println("\t\t"+EMI_3+"</EMI_3>");
+                writer.println("\t\t"+EMI_4+"</EMI_4>");
+                writer.println("\t\t"+EMI_6+"</EMI_6>");
+                writer.println("\t\t"+EMI_7+"</EMI_7>");
+                writer.println("\t\t"+EMI_10+"</EMI_10>");
+                writer.println("\t\t"+EMI_11+"</EMI_11>");
                 //writer.println(EMI_12);
-                writer.println("\t"+EMI_13+"</EMI_13>");
-                writer.println("\t"+EMI_14+"</EMI_14>");
-                writer.println("\t"+EMI_15+"</EMI_15>");
+                writer.println("\t\t"+EMI_13+"</EMI_13>");
+                writer.println("\t\t"+EMI_14+"</EMI_14>");
+                writer.println("\t\t"+EMI_15+"</EMI_15>");
                 //writer.println(EMI_18);
-                writer.println("\t"+EMI_19+"</EMI_19>");
+                writer.println("\t\t"+EMI_19+"</EMI_19>");
                 //writer.println(EMI_20);
-                writer.println("\t"+EMI_21+"</EMI_21>");
-                writer.println("\t"+EMI_22+"</EMI_22>");
-                writer.println("\t"+EMI_23+"</EMI_23>");
-                writer.println("\t"+EMI_24+"</EMI_24>");
-                writer.println("\t"+EMI_25+"</EMI_25>");
+                writer.println("\t\t"+EMI_21+"</EMI_21>");
+                writer.println("\t\t"+EMI_22+"</EMI_22>");
+                writer.println("\t\t"+EMI_23+"</EMI_23>");
+                writer.println("\t\t"+EMI_24+"</EMI_24>");
+                writer.println("\t\t"+EMI_25+"</EMI_25>");
                 ///////////////////////////////////
                 ///////TAC
                 ///////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialTAC);
-                writer.println("\t"+"\t"+TAC_1+"</TAC_1>");
-                writer.println("\t"+"\t"+etiquetaFinalTAC);
+                writer.println("\t\t\t"+etiquetaInicialTAC);
+                writer.println("\t\t\t\t"+TAC_1+"</TAC_1>");
+                writer.println("\t\t\t"+etiquetaFinalTAC);
                 /////////////////////////////////
                 //////DFE
-                writer.println("\t"+"\t"+etiquetaInicialDFE);
-                writer.println("\t"+"\t"+DFE_1+"</DFE_1>");
-                writer.println("\t"+"\t"+DFE_2+"</DFE_2>");
-                writer.println("\t"+"\t"+DFE_3+"</DFE_3>");
-                writer.println("\t"+"\t"+DFE_4+"</DFE_4>");
-                writer.println("\t"+"\t"+DFE_5+"</DFE_5>");
-                writer.println("\t"+"\t"+DFE_6+"</DFE_6>");
-                writer.println("\t"+"\t"+DFE_7+"</DFE_7>");
-                writer.println("\t"+"\t"+DFE_8+"</DFE_8>");
-                writer.println("\t"+"\t"+etiquetaFinalDFE);
+                writer.println("\t\t\t"+etiquetaInicialDFE);
+                writer.println("\t\t\t\t"+DFE_1+"</DFE_1>");
+                writer.println("\t\t\t\t"+DFE_2+"</DFE_2>");
+                writer.println("\t\t\t\t"+DFE_3+"</DFE_3>");
+                writer.println("\t\t\t\t"+DFE_4+"</DFE_4>");
+                writer.println("\t\t\t\t"+DFE_5+"</DFE_5>");
+                writer.println("\t\t\t\t"+DFE_6+"</DFE_6>");
+                writer.println("\t\t\t\t"+DFE_7+"</DFE_7>");
+                writer.println("\t\t\t\t"+DFE_8+"</DFE_8>");
+                writer.println("\t\t\t"+etiquetaFinalDFE);
                 /////////////////////////////////
                 /////////////////////////////////
                 //////ICC
                 /////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialICC);
-                writer.println("\t"+"\t"+ICC_1+"</ICC_1>");
+                writer.println("\t\t\t"+etiquetaInicialICC);
+                writer.println("\t\t\t\t"+ICC_1+"</ICC_1>");
                 //writer.println("ICC_3>Yumbo");
                 //writer.println("ICC_5>Valle");
                 //writer.println("ICC_6>CL 15 22 200");
                 //writer.println("ICC_7>CO");
                 //writer.println("ICC_8>Colombia");
-                writer.println("\t"+"\t"+ICC_9+"</ICC_9>");
-                writer.println("\t"+"\t"+etiquetaFinalICC);
+                writer.println("\t\t\t\t"+ICC_9+"</ICC_9>");
+                writer.println("\t\t\t"+etiquetaFinalICC);
                 //////////////////////////////////
                 ///////CDE
                 //////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialCDE);
-                writer.println("\t"+"\t"+CDE_1+"</CDE_1>");
-                writer.println("\t"+"\t"+CDE_2+"</CDE_2>");
-                writer.println("\t"+"\t"+CDE_4+"</CDE_4>");
-                writer.println("\t"+"\t"+etiquetaFinalCDE);                
+                writer.println("\t\t\t"+etiquetaInicialCDE);
+                writer.println("\t\t\t\t"+CDE_1+"</CDE_1>");
+                writer.println("\t\t\t\t"+CDE_2+"</CDE_2>");
+                writer.println("\t\t\t\t"+CDE_4+"</CDE_4>");
+                writer.println("\t\t\t"+etiquetaFinalCDE);                
                 //////////////////////////////////
                 ///////GTE
                 //////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialGTE);
-                writer.println("\t"+"\t"+GTE_1+"</GTE_1>");
-                writer.println("\t"+"\t"+GTE_2+"</GTE_2>");
-                writer.println("\t"+"\t"+etiquetaFinalGTE);
-                writer.println("\t"+etiquetaFinalEMI);
+                writer.println("\t\t\t"+etiquetaInicialGTE);
+                writer.println("\t\t\t\t"+GTE_1+"</GTE_1>");
+                writer.println("\t\t\t\t"+GTE_2+"</GTE_2>");
+                writer.println("\t\t\t"+etiquetaFinalGTE);
+                writer.println("\t\t"+etiquetaFinalEMI);
                 //////////////////////////////////
                 ///////ADQUIRIENTE
                 //////////////////////////////////
-                writer.println("\t"+etiquetaInicialADQ );
-                writer.println("\t"+ADQ_1+"</ADQ_1>");
-                writer.println("\t"+ADQ_2+"</ADQ_2>");
-                writer.println("\t"+ADQ_3+"</ADQ_3>");
-                writer.println("\t"+ADQ_4+"</ADQ_4>");
-                writer.println("\t"+ADQ_6+"</ADQ_6>");
-                writer.println("\t"+ADQ_7+"</ADQ_7>");
-                writer.println("\t"+ADQ_8+"</ADQ_8>");
-                writer.println("\t"+ADQ_10+"</ADQ_10>");
-                writer.println("\t"+ADQ_11+"</ADQ_11>");
-                writer.println("\t"+ADQ_13+"</ADQ_13>");
-                writer.println("\t"+ADQ_14+"</ADQ_14>");
-                writer.println("\t"+ADQ_15+"</ADQ_15>");
-                writer.println("\t"+ADQ_19+"</ADQ_19>");
-                writer.println("\t"+ADQ_21+"</ADQ_21>");
-                writer.println("\t"+ADQ_22+"</ADQ_22>");
-                writer.println("\t"+ADQ_23+"</ADQ_23>");
+                writer.println("\t\t"+etiquetaInicialADQ );
+                writer.println("\t\t\t"+ADQ_1+"</ADQ_1>");
+                writer.println("\t\t\t"+ADQ_2+"</ADQ_2>");
+                writer.println("\t\t\t"+ADQ_3+"</ADQ_3>");
+                writer.println("\t\t\t"+ADQ_4+"</ADQ_4>");
+                writer.println("\t\t\t"+ADQ_6+"</ADQ_6>");
+                writer.println("\t\t\t"+ADQ_7+"</ADQ_7>");
+                writer.println("\t\t\t"+ADQ_8+"</ADQ_8>");
+                writer.println("\t\t\t"+ADQ_10+"</ADQ_10>");
+                writer.println("\t\t\t"+ADQ_11+"</ADQ_11>");
+                writer.println("\t\t\t"+ADQ_13+"</ADQ_13>");
+                writer.println("\t\t\t"+ADQ_14+"</ADQ_14>");
+                writer.println("\t\t\t"+ADQ_15+"</ADQ_15>");
+                writer.println("\t\t\t"+ADQ_19+"</ADQ_19>");
+                writer.println("\t\t\t"+ADQ_21+"</ADQ_21>");
+                writer.println("\t\t\t"+ADQ_22+"</ADQ_22>");
+                writer.println("\t\t\t"+ADQ_23+"</ADQ_23>");
                 ////////////////////////////////////
                 //////TCR
                 ///////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialTCR);
-                writer.println("\t"+"\t"+TCR_1+"</TCR_1>");
-                writer.println("\t"+"\t"+etiquetaFinalTCR);                
+                writer.println("\t\t\t"+etiquetaInicialTCR);
+                writer.println("\t\t\t\t"+TCR_1+"</TCR_1>");
+                writer.println("\t\t\t"+etiquetaFinalTCR);                
                 ////////////////////////////////////
                 //////ILA
                 ///////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialILA);
-                writer.println("\t"+"\t"+ILA_1+"</ILA_1>");
-                writer.println("\t"+"\t"+ILA_2+"</ILA_2>");
-                writer.println("\t"+"\t"+ILA_3+"</ILA_3>");
-                writer.println("\t"+"\t"+ILA_4+"</ILA_4>");                   
-                writer.println("\t"+"\t"+etiquetaFinalILA);
+                writer.println("\t\t\t"+etiquetaInicialILA);
+                writer.println("\t\t\t\t"+ILA_1+"</ILA_1>");
+                writer.println("\t\t\t\t"+ILA_2+"</ILA_2>");
+                writer.println("\t\t\t\t"+ILA_3+"</ILA_3>");
+                writer.println("\t\t\t\t"+ILA_4+"</ILA_4>");                   
+                writer.println("\t\t\t"+etiquetaFinalILA);
                 ////////////////////////////////////
                 //////DFA
                 ///////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialDFA);
-                writer.println("\t"+"\t"+DFA_1+"</DFA_1>");
-                writer.println("\t"+"\t"+DFA_2+"</DFA_2>");
-                writer.println("\t"+"\t"+DFA_3+"</DFA_3>");
-                writer.println("\t"+"\t"+DFA_4+"</DFA_4>");      
-                writer.println("\t"+"\t"+DFA_5+"</DFA_5>");
-                writer.println("\t"+"\t"+DFA_6+"</DFA_6>");
-                writer.println("\t"+"\t"+DFA_7+"</DFA_7>");
-                writer.println("\t"+"\t"+DFA_8+"</DFA_8>");
-                writer.println("\t"+"\t"+etiquetaFinalDFA);
+                writer.println("\t\t\t"+etiquetaInicialDFA);
+                writer.println("\t\t\t\t"+DFA_1+"</DFA_1>");
+                writer.println("\t\t\t\t"+DFA_2+"</DFA_2>");
+                writer.println("\t\t\t\t"+DFA_3+"</DFA_3>");
+                writer.println("\t\t\t\t"+DFA_4+"</DFA_4>");      
+                writer.println("\t\t\t\t"+DFA_5+"</DFA_5>");
+                writer.println("\t\t\t\t"+DFA_6+"</DFA_6>");
+                writer.println("\t\t\t\t"+DFA_7+"</DFA_7>");
+                writer.println("\t\t\t\t"+DFA_8+"</DFA_8>");
+                writer.println("\t\t\t"+etiquetaFinalDFA);
                 ////////////////////////////////////
                 //////ICR
                 ///////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialICR);
-                writer.println("\t"+"\t"+ICR_1+"</ICR_1>");           
-                writer.println("\t"+"\t"+etiquetaFinalICR);
+                writer.println("\t\t\t"+etiquetaInicialICR);
+                writer.println("\t\t\t\t"+ICR_1+"</ICR_1>");           
+                writer.println("\t\t\t"+etiquetaFinalICR);
                 ////////////////////////////////////
                 //////GTA
                 ///////////////////////////////////
-                writer.println("\t"+"\t"+etiquetaInicialGTA);
-                writer.println("\t"+"\t"+GTA_1+"</GTA_1>");     
-                writer.println("\t"+"\t"+GTA_2+"</GTA_2>");
-                writer.println("\t"+"\t"+etiquetaFinalGTA);
-                writer.println("\t"+etiquetaFinalADQ);
+                writer.println("\t\t\t"+etiquetaInicialGTA);
+                writer.println("\t\t\t\t"+GTA_1+"</GTA_1>");     
+                writer.println("\t\t\t\t"+GTA_2+"</GTA_2>");
+                writer.println("\t\t\t"+etiquetaFinalGTA);
+                writer.println("\t\t"+etiquetaFinalADQ);
                 ////////////////////////////////////////////
                 ///////TOTALES
                 ///////////////////////////////////////////
-                writer.println("\t"+etiquetaInicialTOT);
-                writer.println("\t"+TOT_1+"</TOT_1>");
-                writer.println("\t"+TOT_2+"</TOT_2>");
-                writer.println("\t"+TOT_3+"</TOT_3>");
-                writer.println("\t"+TOT_4+"</TOT_4>");
-                writer.println("\t"+TOT_5+"</TOT_5>");
-                writer.println("\t"+TOT_6+"</TOT_6>");
-                writer.println("\t"+TOT_7+"</TOT_7>");
-                writer.println("\t"+TOT_8+"</TOT_8>");
-                writer.println("\t"+TOT_9+"</TOT_9>");
-                writer.println("\t"+etiquetaFinalTOT);
+                writer.println("\t\t"+etiquetaInicialTOT);
+                writer.println("\t\t\t"+TOT_1+"</TOT_1>");
+                writer.println("\t\t\t"+TOT_2+"</TOT_2>");
+                writer.println("\t\t\t"+TOT_3+"</TOT_3>");
+                writer.println("\t\t\t"+TOT_4+"</TOT_4>");
+                writer.println("\t\t\t"+TOT_5+"</TOT_5>");
+                writer.println("\t\t\t"+TOT_6+"</TOT_6>");
+                writer.println("\t\t\t"+TOT_7+"</TOT_7>");
+                writer.println("\t\t\t"+TOT_8+"</TOT_8>");
+                //writer.println("\t\t\t"+TOT_9+"</TOT_9>");
+                //writer.println("\t\t\t"+TOT_10+"</TOT_10>");
+                writer.println("\t\t"+etiquetaFinalTOT);
                  ///////////////////////////////////////////////
                 //////DSC
-                //////////////////////////////////////////////               
+                ///////////////////////////////////////////////
+                /*
                 if(totalDcto != 0){
-                    writer.println("\t"+etiquetaInicialDSC);
-                writer.println("\t"+DSC_1+"</DSC_1>");
-                writer.println("\t"+DSC_2+"</DSC_2>");
-                writer.println("\t"+DSC_3+"</DSC_3>");
-                writer.println("\t"+DSC_4+"</DSC_4>");
-                writer.println("\t"+DSC_5+"</DSC_5>");
-                writer.println("\t"+DSC_7+"</DSC_7>");
-                writer.println("\t"+DSC_8+"</DSC_8>");     
-                writer.println("\t"+DSC_10+"</DSC_10>");
-                writer.println("\t"+etiquetaFinalDSC);
+                    writer.println("\t\t"+etiquetaInicialDSC);
+                writer.println("\t\t\t"+DSC_1+"</DSC_1>");
+                writer.println("\t\t\t"+DSC_2+"</DSC_2>");
+                writer.println("\t\t\t"+DSC_3+"</DSC_3>");
+                writer.println("\t\t\t"+DSC_4+"</DSC_4>");
+                writer.println("\t\t\t"+DSC_5+"</DSC_5>");
+                writer.println("\t\t\t"+DSC_7+"</DSC_7>");
+                writer.println("\t\t\t"+DSC_8+"</DSC_8>");     
+                writer.println("\t\t\t"+DSC_10+"</DSC_10>");
+                writer.println("\t\t"+etiquetaFinalDSC);
                         }
+*/
                 ///////////////////////////////////////////////
                 //////DFR
                 //////////////////////////////////////////////
-                writer.println("\t"+etiquetaInicialDRF);
-                writer.println("\t"+DRF_1+"</DRF_1>");
-                writer.println("\t"+DRF_2+"</DRF_2>");
-                writer.println("\t"+DRF_3+"</DRF_3>");
-                writer.println("\t"+DRF_4+"</DRF_4>");
-                writer.println("\t"+DRF_5+"</DRF_5>");
-                writer.println("\t"+DRF_6+"</DRF_6>");
-                writer.println("\t"+etiquetaFinalDRF);
+                writer.println("\t\t"+etiquetaInicialDRF);
+                writer.println("\t\t\t"+DRF_1+"</DRF_1>");
+                writer.println("\t\t\t"+DRF_2+"</DRF_2>");
+                writer.println("\t\t\t"+DRF_3+"</DRF_3>");
+                writer.println("\t\t\t"+DRF_4+"</DRF_4>");
+                writer.println("\t\t\t"+DRF_5+"</DRF_5>");
+                writer.println("\t\t\t"+DRF_6+"</DRF_6>");
+                writer.println("\t\t"+etiquetaFinalDRF);
                 //////////////////////////////////////////
                 ///////NOT
-                writer.println("\t"+etiquetaInicialNOT);
-                writer.println("\t"+notaFactura+"</NOT_1>");
-                writer.println("\t"+etiquetaFinalNOT);
+                writer.println("\t\t"+etiquetaInicialNOT);
+                writer.println("\t\t\t"+notaFactura+"</NOT_1>");
+                writer.println("\t\t"+etiquetaFinalNOT);
                 //////////////////////////////////////////
                 ///////MEP
-                writer.println("\t"+etiquetaInicialMEP);
-                writer.println("\t"+MEP_1);
-                writer.println("\t"+MEP_2);
-                writer.println("\t"+MEP_3);
-                writer.println("\t"+etiquetaFinalMEP);
+                writer.println("\t\t"+etiquetaInicialMEP);
+                writer.println("\t\t\t"+MEP_1);
+                writer.println("\t\t\t"+MEP_2);
+                writer.println("\t\t\t"+MEP_3);
+                writer.println("\t\t"+etiquetaFinalMEP);
                 ///////////////////////////////////////////////                
                 
                 ///////////////////////////////////////////////
@@ -1260,25 +1332,36 @@ public class generaXml {
                 //////////////////////////////////////////////
                 //////ITE
                 /////////////////////////////////////////////
-                                int cantidadLineas = 0;
+                 int cantidadLineas = 0;
 
                 while (resultadoLineas.next()) {
+                    
                     cantidad = resultadoLineas.getDouble("Cantidad");
                     importe = resultadoLineas.getDouble("Importe");
                     precio = resultadoLineas.getDouble("Precio");
                     descArticulo = resultadoLineas.getString("DescArticulo");
-                    factor = resultadoLineas.getDouble("Factor");
-                    dto1 = resultadoLineas.getDouble("Dto1");
-                    dto2 = resultadoLineas.getDouble("Dto1");
-                    dto3 = resultadoLineas.getDouble("Dto1");
-                    dto = resultadoLineas.getDouble("Dto1");
+                    iva = resultadoLineas.getDouble("Factor");
+                    dto1 = resultadoLineas.getDouble("Dto1")/divisor;
+                    dto2 = resultadoLineas.getDouble("Dto2")/divisor;
+                    dto3 = resultadoLineas.getDouble("Dto3")/divisor;
+                    dto = resultadoLineas.getDouble("Dto")/divisor;
+                    idLineaFactura = resultadoLineas.getString("IDLineaFactura");
+                    
+                    dtos[0]=dto;
+                    dtos[1]=dto1;                    
+                    dtos[2]=dto2;
+                    dtos[3]=dto3;
+                    
+                    for(int i=0;i<dtos.length;i++){
+                    valorDto1+= calculaDescuento(cantidad * precio,dtos)[i][0];
+                    }
                     
                     idUdMedida = resultadoLineas.getString("IDUdMedida");
                     idArticulo = resultadoLineas.getString("IDArticulo");
+                    
                     subtotal = subtotal + (cantidad * precio);
-                    valorDto1 = cantidad * precio * dto1 / divisor;
                     totalDcto += valorDto1;
-                    mntImpuesto = importe * factor / divisor;
+                    mntIva = importe * iva / divisor;
                     regalo = resultadoLineas.getInt("Regalo");
                     lote = resultadoLineas.getString("LoteItem");
 
@@ -1288,18 +1371,25 @@ public class generaXml {
                     ITE_3 = "<ITE_3>" + cantidad + "";
                     //ITE_4 = "<ITE_4>" + idUdMedida + "";
                     ITE_4 = "<ITE_4>NAR";
-                    ITE_5 = "<ITE_5>" + (cantidad * precio) + "";
+                    ITE_5 = "<ITE_5>" + formateador(importe);
                     ITE_6 = "<ITE_6>" + moneda + "";
-                    ITE_7 = "<ITE_7>" + precio + "";
+                    ITE_7 = "<ITE_7>" + formateador(importe/cantidad);
                     ITE_8 = "<ITE_8>" + moneda + "";
                     ITE_9 = "<ITE_9>" + idArticulo + "";
                     ITE_11 = "<ITE_11>" + descArticulo + "";
-                    ITE_19 = "<ITE_19>" + importe + "";
+                    ITE_19 = "<ITE_19>" + formateador(importe)+ "";
                     ITE_20 = "<ITE_20>" + moneda + "";
                     ITE_27 = "<ITE_27>" + cantidad + "";
                     //ITE_28 = "<ITE_28>" + idUdMedida + "";
                     ITE_28 = "<ITE_28>NAR";
-                    itemsFactura += etiquetaInicialITE + ITE_1 + ITE_2 + ITE_3 + ITE_4 + ITE_5 + ITE_6 + ITE_7 + ITE_8 + ITE_9 + ITE_11 + ITE_19 + ITE_20;
+                    
+                    IIM_1 = "<IIM_1>";
+                    IIM_2 = "<IIM_2>";
+                    IIM_3 = "<IIM_3>";
+                    IIM_4 = "<IIM_4>";
+                    IIM_5 = "<IIM_5>";
+                    IIM_6 = "<IIM_6>";
+                    
 
                     if (lote != null) {
                         String loteItem = "<LOT>" + "<LOT_1>" + lote + "";
@@ -1307,43 +1397,189 @@ public class generaXml {
                     }
 
                     itemsFactura += etiquetaFinalITE;
-                                    writer.println(etiquetaInicialITE);
-                writer.println("\t"+ITE_1+"</ITE_1>");
-                writer.println("\t"+ITE_3+"</ITE_3>");
-                writer.println("\t"+ITE_4+"</ITE_4>");
-                writer.println("\t"+ITE_5+"</ITE_5>");
-                writer.println("\t"+ITE_6+"</ITE_6>");
-                writer.println("\t"+ITE_7+"</ITE_7>");
-                writer.println("\t"+ITE_8+"</ITE_8>");
-                writer.println("\t"+ITE_9+"</ITE_9>");
-                writer.println("\t"+ITE_11+"</ITE_11>");
-                writer.println("\t"+ITE_19+"</ITE_19>");
-                writer.println("\t"+ITE_20+"</ITE_20>");
-                writer.println("\t"+ITE_27+"</ITE_27>");
-                writer.println("\t"+ITE_28+"</ITE_28>");
+                writer.println("\t"+etiquetaInicialITE);
+                writer.println("\t\t"+ITE_1+"</ITE_1>");
+                writer.println("\t\t"+ITE_3+"</ITE_3>");
+                writer.println("\t\t"+ITE_4+"</ITE_4>");
+                writer.println("\t\t"+ITE_5+"</ITE_5>");
+                writer.println("\t\t"+ITE_6+"</ITE_6>");
+                writer.println("\t\t"+ITE_7+"</ITE_7>");
+                writer.println("\t\t"+ITE_8+"</ITE_8>");
+                writer.println("\t\t"+ITE_9+"</ITE_9>");
+                writer.println("\t\t"+ITE_11+"</ITE_11>");
+                writer.println("\t\t"+ITE_19+"</ITE_19>");
+                writer.println("\t\t"+ITE_20+"</ITE_20>");
+                writer.println("\t\t"+ITE_27+"</ITE_27>");
+                writer.println("\t\t"+ITE_28+"</ITE_28>");
+                
                 //////////////////////////////////////
                 ///////LOTE
                 //////////////////////////////////////
 
                 if (lote != null) {
-                    writer.println(etiquetaInicialLote);
-                    writer.println("\t"+"\t"+"<LOT_1>"+lote+"</lot_1>");
-                    writer.println(etiquetaFinalLote);
+                    writer.println("\t\t"+etiquetaInicialLote);
+                    writer.println("\t\t\t"+"<LOT_1>"+lote+"</LOT_1>");
+                    writer.println("\t\t"+etiquetaFinalLote);
                 }
                 ////////////////////////////////////////
                 ////////IAE CODIGO DE ARTICULO SEGUN ESTANDAR
                 IAE_1 = idArticulo;
                 IAE_2 = "999";
                 
-                writer.println("\t"+etiquetaInicialIAE);
-                writer.println("\t\t"+"<IAE_1>"+IAE_1+"</IAE_1>");
-                writer.println("\t\t"+"<IAE_2>"+IAE_2+"</IAE_2>");
-                writer.println("\t"+etiquetaFinalIAE);
+                writer.println("\t\t"+etiquetaInicialIAE);
+                writer.println("\t\t\t<IAE_1>"+IAE_1+"</IAE_1>");
+                writer.println("\t\t\t<IAE_2>"+IAE_2+"</IAE_2>");
+                writer.println("\t\t"+etiquetaFinalIAE);
+                //////////////////////////////////////
+                ///////DESCUENTOS
+                //////////////////////////////////////
+                
+                double baseActual = cantidad * precio;
+                int j =0;
+                double descuentos[][] = new double[dtos.length][0];
+                
+                descuentos = calculaDescuento(baseActual,dtos);
+                
+                for(int i = 0; i<descuentos.length;i++){              
+                                  
+                    
+                    if(descuentos[i][0] != 0.0){
+                    j++;
+                    writer.println("\t\t<IDE>");
+                    writer.println("\t\t<IDE_1>false</IDE_1>");
+                    writer.println("\t\t<IDE_2>"+formateador(descuentos[i][0])+"</IDE_2>");
+                    writer.println("\t\t<IDE_3>COP</IDE_3>");
+                    writer.println("\t\t<IDE_6>"+formateador(dtos[i]*100)+"</IDE_6>");
+                    writer.println("\t\t<IDE_7>"+formateador(descuentos[i][1])+"</IDE_7>");
+                    writer.println("\t\t<IDE_8>COP</IDE_8>");
+                    writer.println("\t\t<IDE_10>"+j+"</IDE_10>");
+                    writer.println("\t\t</IDE>");
+                    
+                    }
+                    
+                  
+                }
                 
                 
                 
                 
-                writer.println(etiquetaFinalITE);
+                //////////////////////////////////////
+                ///////IMPUESTOS
+                //////////////////////////////////////   
+                
+                String sumaImpuestos = "SELECT sum(Importe)as Importe FROM tbFacturaVentaImpuesto where IDLineaFactura= "+idLineaFactura;
+                ResultSet resultadoSumaImpuestos = fachada.ejecutarConsulta(sumaImpuestos);
+                double impuestoLinea = 0.0;
+                
+                while(resultadoSumaImpuestos.next()){
+                    impuestoLinea= resultadoSumaImpuestos.getDouble("Importe");
+                }
+                    
+                if(valorIva != 0){
+                    writer.println("\t\t<TII>");
+                    writer.println("\t\t\t<TII_1>"+formateador(impuestoLinea+mntIva)+"</TII_1>");
+                    writer.println("\t\t\t<TII_2>"+moneda+"</TII_2>");
+                    writer.println("\t\t\t<TII_3>"+false+"</TII_3>");
+                    
+                    writer.println("\t\t\t<IIM>");    
+                    writer.println("\t\t\t\t<IIM_1>01</IIM_1>");
+                    writer.println("\t\t\t\t<IIM_2>"+formateador(mntIva)+"</IIM_2>");
+                    writer.println("\t\t\t\t<IIM_3>"+moneda+"</IIM_3>");
+                    writer.println("\t\t\t\t<IIM_4>"+importe+"</IIM_4>");
+                    writer.println("\t\t\t\t<IIM_5>"+moneda+"</IIM_5>");
+                    writer.println("\t\t\t\t<IIM_6>"+iva+"</IIM_6>");
+                    writer.println("\t\t\t</IIM>");   
+                    
+                    
+                    }
+                
+                
+                
+                String consultaImpuestos = "SELECT * FROM tbFacturaVentaImpuesto where IDLineaFactura= "+idLineaFactura;
+                ResultSet resultadoImpuestos = fachada.ejecutarConsulta(consultaImpuestos);
+                
+                while(resultadoImpuestos.next()){
+                    
+                    writer.println("\t\t\t<IIM>");    
+                    writer.println("\t\t\t\t<IIM_1>"+resultadoImpuestos.getString("IDImpuesto")+"</IIM_1>");
+                    writer.println("\t\t\t\t<IIM_2>"+formateador(resultadoImpuestos.getDouble("Importe"))+"</IIM_2>");
+                    writer.println("\t\t\t\t<IIM_3>"+moneda+"</IIM_3>");
+                    writer.println("\t\t\t\t<IIM_4>"+formateador(importe)+"</IIM_4>");
+                    writer.println("\t\t\t\t<IIM_5>"+moneda+"</IIM_5>");
+                    writer.println("\t\t\t\t<IIM_6>"+formateador(resultadoImpuestos.getDouble("Valor"))+"</IIM_6>");
+                    writer.println("\t\t\t</IIM>");   
+                }
+                
+                writer.println("\t\t</TII>");
+                
+                String consultaRetenciones="select RVL.ImporteRetencion,RVL.BaseRetencion,RVL.Porcentaje,LMR.IDRetencion,LMR.TipoRetencion "
+                        +"from tbLatRetencionVentaLinea as RVL JOIN tbLatMaestroRetencion LMR ON RVL.IDRetencion = LMR.IDRetencion "
+                        +"where IDFactura="+datosDocumento.getString("IDFactura");
+                
+                ResultSet resultadoRetenciones=fachada.ejecutarConsulta(consultaRetenciones);
+                
+                String consultaReteCliente = "select IDCliente, IDRetencionGremio, IDRetencionIva, IDRetencionICA, AplicarRetencion, "
+                        + "AplicarImporteRetencion, AplicarRetencionCREE from tbLatClienteRetencion where IDCliente ="+"'"+cifCliente+"'";
+                
+                ResultSet resultadoReteCliente = fachada.ejecutarConsulta(consultaReteCliente);
+                
+                String consultaReteItem = "select * from tbLatArticuloRetencion where IDArticulo = "+"'"+idArticulo+"'";
+                
+                ResultSet resultadoReteItem = fachada.ejecutarConsulta(consultaReteItem);
+                
+                
+                
+                while(resultadoRetenciones.next()){
+                    String retencion = "";
+                    retencion = resultadoRetenciones.getString("IDRetencion");
+                                       
+                    while(resultadoReteCliente.next()){
+                        if(retencion.equals(resultadoReteCliente.getString("IDRetencionIva")) || (retencion.equals(resultadoReteCliente.getString("IDRetencionIca"))) || (retencion.equals(resultadoReteCliente.getString("IDRetencionIva")))|| (retencion.equals(resultadoReteCliente.getString("IDRetencionGremio")))){
+                            
+                            
+                            writer.println("\t\t\t<IIM>");    
+                            if(resultadoRetenciones.getString("TipoRetencion").equals("1")){
+                            writer.println("\t\t\t\t<IIM_1>05</IIM_1>");
+                            }else if(resultadoRetenciones.getString("TipoRetencion").equals("2")){
+                            writer.println("\t\t\t\t<IIM_1>07</IIM_1>");
+                            }
+                            writer.println("\t\t\t\t<IIM_2>"+formateador((importe+mntIva)*resultadoRetenciones.getDouble("Porcentaje")/100)+"</IIM_2>");
+                            writer.println("\t\t\t\t<IIM_3>"+moneda+"</IIM_3>");
+                            writer.println("\t\t\t\t<IIM_4>"+formateador(importe+mntIva)+"</IIM_4>");
+                            writer.println("\t\t\t\t<IIM_5>"+moneda+"</IIM_5>");
+                            writer.println("\t\t\t\t<IIM_6>"+resultadoRetenciones.getDouble("Porcentaje")+"</IIM_6>");
+                            writer.println("\t\t\t</IIM>");  
+                        }
+                    }
+                    
+                    while(resultadoReteItem.next()){
+                        if(retencion.equals(resultadoReteItem.getString("IDRetencion"))){
+                            
+                            
+                            writer.println("\t\t\t<IIM>");
+                            writer.println("\t\t\t\t<IIM_1>06</IIM_1>");
+                            
+                            writer.println("\t\t\t\t<IIM_2>"+formateador((importe)*resultadoRetenciones.getDouble("Porcentaje")/100)+"</IIM_2>");
+                            writer.println("\t\t\t\t<IIM_3>"+moneda+"</IIM_3>");
+                            writer.println("\t\t\t\t<IIM_4>"+formateador(importe)+"</IIM_4>");
+                            writer.println("\t\t\t\t<IIM_5>"+moneda+"</IIM_5>");
+                            writer.println("\t\t\t\t<IIM_6>"+resultadoRetenciones.getDouble("Porcentaje")+"</IIM_6>");
+                            writer.println("\t\t\t</IIM>");  
+                        }
+                    }
+                    
+    
+
+                }
+                
+               
+ 
+                
+                
+                
+                
+                
+                writer.println("\t"+etiquetaFinalITE);
 
                 }
                 
@@ -1454,6 +1690,53 @@ public class generaXml {
             break;
         }
         return regimen;              
+    }
+    
+    private double[][] calculaDescuento(double base, double[] Dtos){
+        double[][] arrayDescuento;
+        arrayDescuento = new double[Dtos.length][2];
+        double dtoTotal = 0.0;
+        double baseconDescuento = base;
+        
+        
+        for(int i=0;i<Dtos.length;i++){
+            if(Dtos[i]!=0){                                
+                arrayDescuento[i][0]=baseconDescuento*Dtos[i];
+                arrayDescuento[i][1]=baseconDescuento;
+                baseconDescuento-=baseconDescuento*Dtos[i];
+            }
+            
+        }
+        
+        return arrayDescuento;
+    }
+    
+    private String formateador(Double numero){
+        String valor = "";
+        int decimales = 0;
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+                simbolos.setDecimalSeparator('.');
+                DecimalFormat formatoEntero = new DecimalFormat("#", simbolos);
+                DecimalFormat formatoDecimal = new DecimalFormat("#0.000000", simbolos);
+                
+        
+        valor = String.valueOf(numero);
+        decimales = valor.length()-valor.indexOf(".");
+        
+        if(decimales > 6){
+            valor = formatoDecimal.format(numero);
+            
+            for(int i=valor.length()-1;i>0;i--){
+                if(valor.charAt(i) =='0'){
+                    valor = valor.substring(0, valor.length()-1);
+                }else
+                    return valor;
+            }
+            
+            return valor;
+        }
+        
+        return valor;
     }
     
     private void mensajesErrorCamposCliente(String campo, String id){
