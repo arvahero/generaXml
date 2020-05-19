@@ -51,9 +51,11 @@ public class generaXml {
     String correo = "";
     String tipoDocumento = "";
     String cufe = "";
+    String cufeDocReferencia = "";
     String zonaHoraria= "-05:00";
     
     String sSistemaOperativo = System.getProperty("os.name");
+    String mensajes = "";
 
 
     //////////////////////////////////////////////
@@ -112,6 +114,7 @@ public class generaXml {
     String medioPago = "";
     String formaPago = "";
     String prefijo = "";
+    String docReferencia = "";
     double importeBruto = 0.00;
     double baseImponible = 0.00;
     double valorIva = 0.00;
@@ -407,10 +410,11 @@ public class generaXml {
             writer = new PrintWriter(ruta);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(generaXml.class.getName()).log(Level.SEVERE, null, ex);
+            mensajes+= "Error al inicializar el archivo: "+ruta+".5\n";
         }
 
     }
-
+/*
     public void generarEncabezadoConexion(int tipo) {
         tipoDocumento = "";
         if (tipo == 0) {
@@ -428,9 +432,12 @@ public class generaXml {
 
         //System.out.print(encabezadoConexion);
     }
+    */
   
 
-    public void generarConsulta() {
+    public void generarConsulta(String fechaInicial, String fechaFinal) {
+        
+        
         fachada.establecerConexion();
 /*
         String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbClienteObservacion.IDObservacion as clasificacionCliente, C.IDTipoCliente,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
@@ -442,30 +449,23 @@ public class generaXml {
                 + "CG.IDPais,FVC.IDFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
                 + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.IDContador NOT LIKE 'N%' and FechaFactura >=CONVERT(date,GETDATE()) and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 */
-        String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
+        String consultaFacturas = "select C.CifCliente,C.DescCliente,C.RazonSocial,tbLatDocIdentidad.IDDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,IDFacturaRectificada as DocReferencia,"
                 + "C.Provincia as DptoC,C.IDPais as PaisC,FVCCG.CodPostal, FVCCG.NFactura,SUBSTRING(FVCCG.NFactura,LEN(FVCCG.IDContador)+1,LEN(FVCCG.NFactura)-LEN(FVCCG.IDContador)) "
                 + "AS Folio,CONVERT(CHAR(10),FVCCG.FechaFactura,23) as Fecha,CONVERT(CHAR(10), FVCCG.FechaFactura,108) as Hora,FVCCG.FechaFactura,CONVERT(CHAR(10),FVCCG.FechaVencimiento,23) as FechaV,FVCCG.FechaVencimiento,FVCCG.IDContador,FVCCG.IDMoneda,"
                 + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.ImpDtoFactura,FVCCG.DtoFactura,FVCCG.ImpRetencion, FVCCG.ImpImpuestos , FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura,FVCCG.TipoFactura from tbMaestroCliente as C INNER JOIN tbLatDocIdentidad on tbLatDocIdentidad.TipoDocIdentidad = c.TipoDocIdentidad " 
                 + "JOIN (select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DtoFactura,FVC.ImpDtoFactura,FVC.ImpRetencion, FVC.ImpImpuestos ,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,FVC.CodPostal,"
-                + "CG.IDPais,FVC.IDFactura, FVC.TipoFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
-                + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.FechaFactura >=CONVERT(date,'2020-02-29') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
+                + "CG.IDPais,FVC.IDFactura, FVC.TipoFactura, FVC.IDFacturaRectificada from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
+                + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.FechaFactura >=CONVERT(date,'"+fechaInicial+"') and FVCCG.FechaFactura <=CONVERT(date,'"+fechaFinal+"') and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
 
         ResultSet resultadoFacturas = fachada.ejecutarConsulta(consultaFacturas);
         ResultSet datosEmpresa = fachada.ejecutarConsulta("select DescEmpresa,Cif,Direccion,web,CodPostal, Poblacion, provincia as Departamento,substring(codpostal,1,2) as Provincia,tbDatosEmpresa.IDPais, tbMaestroPais.CodigoISO, DescPais, IDCNAE AS CIIU, DatosRegistrales as Obligaciones, RegistroMercantil, IDCAE as TipoDoc from tbDatosEmpresa inner join tbMaestroPais on tbDatosEmpresa.IDPais = tbMaestroPais.IDPais");
 
-        String consultaNotas = "select C.CifCliente,C.DescCliente,C.RazonSocial,C.IDTipoCliente,C.TipoDocIdentidad,C.Direccion as DireccionC,C.Poblacion as CiudadC,"
-                + "C.Provincia as DptoC,C.IDPais as PaisC,FVCCG.NFactura,SUBSTRING(FVCCG.NFactura,LEN(FVCCG.IDContador)+1,LEN(FVCCG.NFactura)-LEN(FVCCG.IDContador)) "
-                + "AS Folio,CONVERT(CHAR(10),FVCCG.FechaFactura,23) as Fecha,CONVERT(CHAR(10), FVCCG.FechaFactura,108) as Hora,FVCCG.FechaFactura,FVCCG.FechaVencimiento as FechaV,FVCCG.IDContador,FVCCG.IDFacturaRectificada,FVCCG.IDMoneda,"
-                + "FVCCG.IDFormaPago,FVCCG.IDCondicionPago,FVCCG.BaseImponible,FVCCG.ImpIva,FVCCG.ImpTotal,FVCCG.Direccion,FVCCG.Poblacion,FVCCG.Provincia,FVCCG.IDPais,FVCCG.IDFactura from tbMaestroCliente as C JOIN "
-                + "(select FVC.IDCliente,FVC.NFactura,FVC.FechaFactura,FVC.FechaVencimiento,FVC.IDContador,FVC.IDFacturaRectificada,FVC.IDMoneda,FVC.IDFormaPago,FVC.IDCondicionPago,FVC.BaseImponible,FVC.ImpIva,FVC.ImpTotal,FVC.DirecFacturaXML,CG.Direccion,CG.Poblacion,CG.Provincia,"
-                + "CG.IDPais,FVC.IDFactura from tbFacturaVentaCabecera as FVC JOIN tbMaestroCentroGestion as CG on FVC.IDCentroGestion = CG.IDCentroGestion) as FVCCG "
-                + "on C.IDCliente = FVCCG.IDCliente WHERE FVCCG.IDContador LIKE 'N%' and FechaFactura >=CONVERT(date,GETDATE()) and (DirecFacturaXML is null or DirecFacturaXML <> 'Generada')";
-
-        ResultSet resultadoNotasC = fachada.ejecutarConsulta(consultaNotas);
+  
+        //ResultSet resultadoNotasC = fachada.ejecutarConsulta(consultaNotas);
 
         generarDatosEmpresa(datosEmpresa);
 
-        generarEncabezadoConexion(0);
+        
         generarFacturas(resultadoFacturas, datosEmpresa);
 
         //generarNotasCredito(resultadoNotasC, datosEmpresa);
@@ -502,7 +502,8 @@ public class generaXml {
             }
         } catch (SQLException ex) {
             Logger.getLogger(generaXml.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.print(ex);
+            //System.out.print(ex);
+            mensajes+="Error al traer los datos de la empresa.6\n";
         }
     }
 
@@ -523,11 +524,14 @@ public class generaXml {
                 cifCliente = id.substring(0, id.indexOf('-'));
                 dvCliente = id.substring(id.indexOf('-')+1);
                 numeroFactura = datosDocumento.getString("NFactura");
+                docReferencia = datosDocumento.getString("DocReferencia");
                 tipoFactura = datosDocumento.getString("TipoFactura");
                 fechaEmisionFactura = datosDocumento.getString("Fecha");
                 horaEmisionFactura = (datosDocumento.getString("Hora")).trim();
                 moneda = datosDocumento.getString("IDMoneda");
                 fechaVencimientoFactura = datosDocumento.getString("FechaV");
+                
+                
                 
                 if(datosDocumento.getString("IDFormaPago").equals("00")){
                 medioPago = "ZZZ";
@@ -729,15 +733,37 @@ public class generaXml {
                 
                 GTA_1 = "<GTA_1>";
                 GTA_2 = "<GTA_2>";
+                
+                if(prefijo.contains("ND")){
+                    tipoDocumento = "<NOTA>";
+                    etiquetaFinDoc = "</NOTA>";
+                    ENC_1 += "ND";
+                    ENC_9 += "92";
+                }else if(prefijo.contains("NV")){
+                    ENC_1 += "NC";
+                    tipoDocumento = "<NOTA>";
+                    etiquetaFinDoc = "</NOTA>";
+                    ENC_9 += "91";
+                }else{
+                    ENC_1 += "INVOIC";
+                    tipoDocumento = "<FACTURA>";
+                    etiquetaFinDoc = "</FACTURA>";
+                    if(prefijo.contains("CONT")){
+                        ENC_9 += "03";                    
+                    }else{
+                        ENC_9 += "01";  
+                    }
                     
-                ENC_1 += "INVOIC";
+                    
+                }
                 ENC_2 += cif + "";
                 ENC_3 += cifCliente + "";
                 ENC_6 += numeroFactura + "";
                 //ENC_6 += "PRUE980000100";
                 ENC_7 += fechaEmisionFactura + "";
                 ENC_8 += horaEmisionFactura + zonaHoraria + "";
-                ENC_9 += "01";
+                
+                
                 ENC_10 += moneda + "";
                 ENC_11 += "";
                 ENC_12 += "";
@@ -819,7 +845,7 @@ public class generaXml {
                     obligacionesADQ+=r.getString("obligacion")+";";
                 }
                 if(obligacionesADQ.isEmpty()){
-                    mensajesErrorCamposCliente("obligaciones",id);
+                    mensajesErrorCamposCliente("obligaciones",id,numeroFactura);
                 }
                 
              
@@ -829,7 +855,7 @@ public class generaXml {
                     tipoPersonaADQ=r.getString("tipoPersona");
                 }
                 if(tipoPersonaADQ.isEmpty()){
-                    mensajesErrorCamposCliente("tipo persona",id);
+                    mensajesErrorCamposCliente("tipo persona",id,numeroFactura);
                 }
 
                 
@@ -1477,11 +1503,36 @@ public class generaXml {
                 writer.println("\t\t\t<DRF_5>1</DRF_5>");
                 writer.println("\t\t\t<DRF_6>5000000</DRF_6>");
                 writer.println("\t\t"+etiquetaFinalDRF);
-                //////////////////////////////////////////
                 ///////NOT
                 writer.println("\t\t"+etiquetaInicialNOT);
                 writer.println("\t\t\t"+notaFactura+"</NOT_1>");
                 writer.println("\t\t"+etiquetaFinalNOT);
+                //////////////////////////////////////////
+                if(docReferencia != null){
+                String consultaDocReferencia = "Select IDContador, SUBSTRING(NFactura,LEN(IDContador)+1,LEN(NFactura)-LEN(IDContador)) AS Folio, CONVERT(CHAR(10),FechaFactura,23) as Fecha from tbFacturaVentaCabecera where IDFactura ="+docReferencia;
+                ResultSet resultadoDocReferencia = fachada.ejecutarConsulta(consultaDocReferencia);
+                
+                String prefijoDocRefencia = "";
+                String folioDocReferencia = "";
+                String fechaDocReferencia = "";
+                
+                while(resultadoDocReferencia.next()){
+                    prefijoDocRefencia = resultadoDocReferencia.getString("IDContador");
+                    folioDocReferencia = resultadoDocReferencia.getString("Folio");
+                    fechaDocReferencia = resultadoDocReferencia.getString("Fecha");
+                }
+                cufeDocReferencia = getCufe(prefijoDocRefencia,folioDocReferencia);
+                ////////////////////////////////////////////
+                ///////REF
+                writer.println("\t\t<REF>");
+                writer.println("\t\t\t<REF_1>IV</REF_1>");
+                writer.println("\t\t\t<REF_2>"+prefijoDocRefencia+folioDocReferencia+"</REF_2>");
+                writer.println("\t\t\t<REF_3>"+fechaDocReferencia+"</REF_3>");
+                writer.println("\t\t\t<REF_4>"+cufeDocReferencia+"</REF_4>");
+                writer.println("\t\t\t<REF_5>CUFE-SHA256</REF_5>");
+                writer.println("\t\t</REF>");
+                }              
+                
                 //////////////////////////////////////////
                 ///////MEP
                 writer.println("\t\t"+etiquetaInicialMEP);
@@ -1731,10 +1782,8 @@ public class generaXml {
                     
                     tipoRetencion = resultadoRetenciones.getString("TipoRetencion");
                     porcentajeRetencion = resultadoRetenciones.getDouble("Porcentaje");
-                                       
 
-                    while(resultadoReteCliente.next()){
-                        
+                    while(resultadoReteCliente.next()){    
                         if(retencion.equals(resultadoReteCliente.getString("IDRetencionIva")) || (retencion.equals(resultadoReteCliente.getString("IDRetencionIca"))) || (retencion.equals(resultadoReteCliente.getString("IDRetencionIva")))|| (retencion.equals(resultadoReteCliente.getString("IDRetencionGremio")))){
                             
                             
@@ -1757,12 +1806,30 @@ public class generaXml {
                             textoRetenciones+=("\t\t\t</IIM>\n");  
                             sumaRetenciones+=valorRetencion;
                         }
+                        if(valorRetencion != 0.0){
+                            valorRetencion = 0.0;
+                            writer.println("\t\t<TII>");
+                writer.println("\t\t\t<TII_1>"+formateador(sumaRetenciones)+"</TII_1>");
+                writer.println("\t\t\t<TII_2>"+moneda+"</TII_2>");
+                writer.println("\t\t\t<TII_3>"+true+"</TII_3>");
+                        writer.println(textoRetenciones);
+                         writer.println("\t\t</TII>");
+                         textoRetenciones = "";
+                         
+                        }
+                        
                     }
+
+                    
+                    
                     ResultSet resultadoReteItem = fachada.ejecutarConsulta(consultaReteItem);
                     while(resultadoReteItem.next()){
+                        
+                        
                         valorRetencion = (importe)*porcentajeRetencion/100;
+                        if(valorRetencion != 0.0){
                         if(retencion.equals(resultadoReteItem.getString("IDRetencion"))){
-                            sumaRetenciones+=valorRetencion;
+                            sumaRetenciones=valorRetencion;
                             
                             textoRetenciones+=("\t\t\t<IIM>\n");
                             textoRetenciones+=("\t\t\t\t<IIM_1>06</IIM_1>\n");
@@ -1774,21 +1841,31 @@ public class generaXml {
                             textoRetenciones+=("\t\t\t\t<IIM_5>"+moneda+"</IIM_5>\n");
                             textoRetenciones+=("\t\t\t\t<IIM_6>"+porcentajeRetencion+"</IIM_6>\n");
                             textoRetenciones+=("\t\t\t</IIM>\n");  
+                            
+                            writer.println("\t\t<TII>");
+                writer.println("\t\t\t<TII_1>"+formateador(sumaRetenciones)+"</TII_1>");
+                writer.println("\t\t\t<TII_2>"+moneda+"</TII_2>");
+                writer.println("\t\t\t<TII_3>"+true+"</TII_3>");
+                        writer.println(textoRetenciones);
+                        writer.println("\t\t</TII>");
+                        textoRetenciones = "";
+                        valorRetencion = 0.0;
+                            
+                        }
+                        
+                        
+                        
                         }
                     }
                     
     
 
                 }
-                if(valorRetencion != 0.0){
-                writer.println("\t\t<TII>");
-                writer.println("\t\t\t<TII_1>"+formateador(sumaRetenciones)+"</TII_1>");
-                writer.println("\t\t\t<TII_2>"+moneda+"</TII_2>");
-                writer.println("\t\t\t<TII_3>"+true+"</TII_3>");
+                
                     
-                writer.println(textoRetenciones);
-                writer.println("\t\t</TII>");
-                }
+                
+               
+                
                
  
                 
@@ -1800,12 +1877,19 @@ public class generaXml {
 
                 }
                 
-                writer.println(etiquetaFinDoc);               
+                writer.println(etiquetaFinDoc);    
+                if(numeroFactura.isEmpty()){
+                    mensajes+="No hay información asociada en el rango de fechas dado.\n";
+                }
+                mensajes+= "Documento: "+numeroFactura+" generado correctamente.7\n";
                 
                  writer.close(); 
                             
 
             }
+            if(numeroFactura.isEmpty()){
+                    mensajes+="No hay información asociada en el rango de fechas dado.\n";
+                }
             
             
             /*
@@ -1826,8 +1910,7 @@ public class generaXml {
             
 
         } catch (Exception e) {
-            System.out.println("Error Factura: " + e.toString());
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            mensajes+=("Error : " + e.toString()+" documento: "+numeroFactura+".1\n");
         } finally {
             //fachada.cerrarConexion();
         }
@@ -1852,7 +1935,7 @@ public class generaXml {
             }
         }
 
-        System.out.print("Esapcios: " + espacios);
+        //System.out.print("Esapcios: " + espacios);
         return espacios;
 
     }
@@ -1955,14 +2038,15 @@ public class generaXml {
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.');
         DecimalFormat formatoDecimal = new DecimalFormat("#0.000000", simbolos);
-        valor = String.valueOf(numero);
+        valor = String.format("%.6f",numero);
+        valor = valor.replace(',', '.');
         
         decimales = valor.length()-valor.indexOf(".")-1 ;
                if(decimales >6){
             valor = formatoDecimal.format(numero);  
                }
             largo  = valor.length()-1;
-            for(int i=6;i>0;i--){
+            for(int i=7;i>0;i--){
                 if(valor.charAt(largo) =='0'){
                     valor = valor.substring(0, largo);
                     largo--;
@@ -2026,10 +2110,15 @@ public class generaXml {
         return bigDecimalRedondeado;
     }
     
-    private void mensajesErrorCamposCliente(String campo, String id){
+    private void mensajesErrorCamposCliente(String campo, String id, String documento){
         
-        System.out.println("Por favor verifique el campo: "+ campo + " del cliente: "+id);
+        mensajes+=("Por favor verifique el campo: "+ campo + " del cliente: "+id+" en el documento "+documento+".2\n");
         
+    }
+    
+    public String getMensajes(){
+        
+        return mensajes;
     }
     
     private String getCufe(String prefijo, String folio){
@@ -2054,6 +2143,7 @@ public class generaXml {
             System.out.println(result.getSuccess() + " ok\n");
         } catch (Exception ex) {
             ex.printStackTrace();
+            mensajes+="Error "+ex.toString()+ "numero de documento: "+numeroFactura+".3\n";
         }
         
         return cufe;

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="urn:https://ws.facturatech.co/21" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:https://ws.facturatech.co/21">
+<types>
+<xsd:schema targetNamespace="urn:https://ws.facturatech.co/21"
+>
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+ <xsd:complexType name="response_ws">
+  <xsd:all>
+   <xsd:element name="code" type="xsd:string"/>
+   <xsd:element name="success" type="xsd:string"/>
+   <xsd:element name="transaccionID" type="xsd:string"/>
+   <xsd:element name="error" type="xsd:string"/>
+  </xsd:all>
+ </xsd:complexType>
+ <xsd:complexType name="response_docs">
+  <xsd:all>
+   <xsd:element name="code" type="xsd:string"/>
+   <xsd:element name="success" type="xsd:string"/>
+   <xsd:element name="status" type="xsd:string"/>
+   <xsd:element name="error" type="xsd:string"/>
+  </xsd:all>
+ </xsd:complexType>
+ <xsd:complexType name="response_xml">
+  <xsd:all>
+   <xsd:element name="code" type="xsd:string"/>
+   <xsd:element name="success" type="xsd:string"/>
+   <xsd:element name="resourceData" type="xsd:string"/>
+   <xsd:element name="error" type="xsd:string"/>
+  </xsd:all>
+ </xsd:complexType>
+ <xsd:complexType name="response_pdf">
+  <xsd:all>
+   <xsd:element name="code" type="xsd:string"/>
+   <xsd:element name="success" type="xsd:string"/>
+   <xsd:element name="resourceData" type="xsd:string"/>
+   <xsd:element name="error" type="xsd:string"/>
+  </xsd:all>
+ </xsd:complexType>
+ <xsd:complexType name="response_cufe">
+  <xsd:all>
+   <xsd:element name="code" type="xsd:string"/>
+   <xsd:element name="success" type="xsd:string"/>
+   <xsd:element name="resourceData" type="xsd:string"/>
+   <xsd:element name="error" type="xsd:string"/>
+  </xsd:all>
+ </xsd:complexType>
+ <xsd:complexType name="response_qr">
+  <xsd:all>
+   <xsd:element name="code" type="xsd:string"/>
+   <xsd:element name="success" type="xsd:string"/>
+   <xsd:element name="resourceData" type="xsd:string"/>
+   <xsd:element name="error" type="xsd:string"/>
+  </xsd:all>
+ </xsd:complexType>
+</xsd:schema>
+</types>
+<message name="FtechAction.uploadInvoiceFileRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="xmlBase64" type="xsd:string" /></message>
+<message name="FtechAction.uploadInvoiceFileResponse">
+  <part name="return" type="tns:response_ws" /></message>
+<message name="FtechAction.documentStatusFileRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="transaccionID" type="xsd:string" /></message>
+<message name="FtechAction.documentStatusFileResponse">
+  <part name="return" type="tns:response_docs" /></message>
+<message name="FtechAction.downloadXMLFileRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="prefijo" type="xsd:string" />
+  <part name="folio" type="xsd:string" /></message>
+<message name="FtechAction.downloadXMLFileResponse">
+  <part name="return" type="tns:response_xml" /></message>
+<message name="FtechAction.downloadPDFFileRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="prefijo" type="xsd:string" />
+  <part name="folio" type="xsd:string" /></message>
+<message name="FtechAction.downloadPDFFileResponse">
+  <part name="return" type="tns:response_pdf" /></message>
+<message name="FtechAction.getCUFEFileRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="prefijo" type="xsd:string" />
+  <part name="folio" type="xsd:string" /></message>
+<message name="FtechAction.getCUFEFileResponse">
+  <part name="return" type="tns:response_cufe" /></message>
+<message name="FtechAction.getQRFileRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="prefijo" type="xsd:string" />
+  <part name="folio" type="xsd:string" /></message>
+<message name="FtechAction.getQRFileResponse">
+  <part name="return" type="tns:response_qr" /></message>
+<message name="FtechAction.uploadInvoiceFileLayoutRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="layout" type="xsd:string" /></message>
+<message name="FtechAction.uploadInvoiceFileLayoutResponse">
+  <part name="return" type="tns:response_ws" /></message>
+<message name="FtechAction.downloadDIANResultRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="prefijo" type="xsd:string" />
+  <part name="folio" type="xsd:string" /></message>
+<message name="FtechAction.downloadDIANResultResponse">
+  <part name="return" type="tns:response_xml" /></message>
+<portType name="SERVICES-FACTURATECHPortType">
+  <operation name="FtechAction.uploadInvoiceFile">
+    <documentation>La función recibe el usuario, password con formato hash 256, xml en base 64, y responde el folio de transacción del comprobante</documentation>
+    <input message="tns:FtechAction.uploadInvoiceFileRequest"/>
+    <output message="tns:FtechAction.uploadInvoiceFileResponse"/>
+  </operation>
+  <operation name="FtechAction.documentStatusFile">
+    <documentation>La función recibe el usuario, password en formato hash 256, transacciónId, y responde el estatus del comprobante</documentation>
+    <input message="tns:FtechAction.documentStatusFileRequest"/>
+    <output message="tns:FtechAction.documentStatusFileResponse"/>
+  </operation>
+  <operation name="FtechAction.downloadXMLFile">
+    <documentation>La funcion recibe el usuario, password en formato hash 256, prefijo , folio del documento, y responde el comprobante XML en formato base64</documentation>
+    <input message="tns:FtechAction.downloadXMLFileRequest"/>
+    <output message="tns:FtechAction.downloadXMLFileResponse"/>
+  </operation>
+  <operation name="FtechAction.downloadPDFFile">
+    <documentation>La funcion recibe el usuario, password en formato hash 256, prefijo , folio del documento, y responde el comprobante PDF en formato base64</documentation>
+    <input message="tns:FtechAction.downloadPDFFileRequest"/>
+    <output message="tns:FtechAction.downloadPDFFileResponse"/>
+  </operation>
+  <operation name="FtechAction.getCUFEFile">
+    <documentation>La funcion recibe el usuario, password en formato hash 256, prefijo , folio del documento, y responde el CUFE del documento firmado</documentation>
+    <input message="tns:FtechAction.getCUFEFileRequest"/>
+    <output message="tns:FtechAction.getCUFEFileResponse"/>
+  </operation>
+  <operation name="FtechAction.getQRFile">
+    <documentation>La funcion recibe el usuario, password en formato hash 256, prefijo , folio del documento, y responde el QR del documento firmado</documentation>
+    <input message="tns:FtechAction.getQRFileRequest"/>
+    <output message="tns:FtechAction.getQRFileResponse"/>
+  </operation>
+  <operation name="FtechAction.uploadInvoiceFileLayout">
+    <documentation>La función recibe el usuario, password con formato hash 256, layout y responde el folio de transacción del comprobante</documentation>
+    <input message="tns:FtechAction.uploadInvoiceFileLayoutRequest"/>
+    <output message="tns:FtechAction.uploadInvoiceFileLayoutResponse"/>
+  </operation>
+  <operation name="FtechAction.downloadDIANResult">
+    <documentation>La función recibe el usuario, password con formato hash 256, prefijo, folio del documento y responde el DIAN result de transacción del comprobante</documentation>
+    <input message="tns:FtechAction.downloadDIANResultRequest"/>
+    <output message="tns:FtechAction.downloadDIANResultResponse"/>
+  </operation>
+</portType>
+<binding name="SERVICES-FACTURATECHBinding" type="tns:SERVICES-FACTURATECHPortType">
+  <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="FtechAction.uploadInvoiceFile">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.uploadInvoiceFile" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="FtechAction.documentStatusFile">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.documentStatusFile" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="FtechAction.downloadXMLFile">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.downloadXMLFile" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="FtechAction.downloadPDFFile">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.downloadPDFFile" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="FtechAction.getCUFEFile">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.getCUFEFile" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="FtechAction.getQRFile">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.getQRFile" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="FtechAction.uploadInvoiceFileLayout">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.uploadInvoiceFileLayout" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+  <operation name="FtechAction.downloadDIANResult">
+    <soap:operation soapAction="urn:https://ws.facturatech.co/21#FtechAction.downloadDIANResult" style="rpc"/>
+    <input><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="urn:https://ws.facturatech.co/21" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+</binding>
+<service name="SERVICES-FACTURATECH">
+  <port name="SERVICES-FACTURATECHPort" binding="tns:SERVICES-FACTURATECHBinding">
+    <soap:address location="https://ws.facturatech.co/21/index.php"/>
+  </port>
+</service>
+</definitions>
