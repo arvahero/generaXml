@@ -1093,6 +1093,23 @@ is divided into following sections:
             <entry key="${basedir}" value=""/>
         </propertyfile>
     </target>
+    <target depends="init" name="wscompile-init">
+        <taskdef classname="com.sun.xml.rpc.tools.ant.Wscompile" classpath="${wscompile.classpath}" name="wscompile"/>
+        <taskdef classname="org.netbeans.modules.websvc.jaxrpc.ant.WsClientUpToDate" classpath="${wsclientuptodate.classpath}" name="wsclientuptodate"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${build.generated.sources.dir}/jax-rpc"/>
+        <wsclientuptodate property="wscompile.client.index.php.notrequired" sourcewsdl="${meta.inf.dir}/wsdl/index.php.wsdl" targetdir="${build.generated.sources.dir}/jax-rpc"/>
+    </target>
+    <target depends="wscompile-init" name="index.php-client-wscompile" unless="wscompile.client.index.php.notrequired">
+        <property location="${meta.inf.dir}/wsdl" name="config_target"/>
+        <copy encoding="UTF-8" file="${meta.inf.dir}/wsdl/index.php-config.xml" filtering="on" tofile="${build.generated.sources.dir}/jax-rpc/wsdl/index.php-config.xml">
+            <filterset>
+                <filter token="CONFIG_ABSOLUTE_PATH" value="${config_target}"/>
+            </filterset>
+        </copy>
+        <wscompile base="${build.generated.sources.dir}/jax-rpc" classpath="${wscompile.classpath}:${javac.classpath}" client="true" config="${build.generated.sources.dir}/jax-rpc/wsdl/index.php-config.xml" debug="${wscompile.client.index.php.debug}" features="${wscompile.client.index.php.features}" fork="true" httpproxy="${wscompile.client.index.php.proxy}" import="false" keep="true" mapping="${build.generated.sources.dir}/jax-rpc/wsdl/index.php-mapping.xml" optimize="${wscompile.client.index.php.optimize}" sourceBase="${build.generated.sources.dir}/jax-rpc" verbose="${wscompile.client.index.php.verbose}" xPrintStackTrace="${wscompile.client.index.php.xPrintStackTrace}" xSerializable="${wscompile.client.index.php.xSerializable}"/>
+    </target>
+    <target depends="index.php-client-wscompile" name="web-service-client-generate"/>
     <target depends="init,-check-automatic-build,-clean-after-automatic-build" name="-verify-automatic-build"/>
     <target depends="init" name="-check-automatic-build">
         <available file="${build.classes.dir}/.netbeans_automatic_build" property="netbeans.automatic.build"/>
@@ -1102,7 +1119,7 @@ is divided into following sections:
             <param name="no.dependencies" value="true"/>
         </antcall>
     </target>
-    <target depends="init,deps-jar" name="-pre-pre-compile">
+    <target depends="init,deps-jar,web-service-client-generate" name="-pre-pre-compile">
         <mkdir dir="${build.classes.dir}"/>
     </target>
     <target name="-pre-compile">

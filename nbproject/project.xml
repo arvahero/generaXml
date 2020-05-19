@@ -14,5 +14,12 @@
         <libraries xmlns="http://www.netbeans.org/ns/ant-project-libraries/1">
             <definitions>.\lib\nblibraries.properties</definitions>
         </libraries>
+        <web-service-clients xmlns="http://www.netbeans.org/ns/j2se-project/jax-rpc">
+            <web-service-client>
+                <web-service-client-name>index.php</web-service-client-name>
+                <web-service-stub-type>jaxrpc_static_client</web-service-stub-type>
+                <client-source-url>https://ws.facturatech.co/21/index.php?wsdl</client-source-url>
+            </web-service-client>
+        </web-service-clients>
     </configuration>
 </project>
